@@ -12,7 +12,7 @@ class Location
   # location_name - String
   #
   # Returns nothing
-  def self.new(location_name)
+  def self.add(location_name)
     DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');")
   end
 
@@ -21,6 +21,13 @@ class Location
   # Returns all data from the locations table
   def self.all
     DATABASE.execute("SELECT * FROM locations;")
+  end
+
+  # Reads all shoes at a location object
+  #
+  # Returns all shoes (rows) at that location from the shoes table
+  def shoes
+    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
 
   # Update method for the locations table

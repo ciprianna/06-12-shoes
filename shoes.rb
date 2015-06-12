@@ -12,12 +12,10 @@ class Shoe
   # shoe_name - String
   # cost - Integer
   # color - String
-  # category_id - Integer - MUST match a primary key from categories table
-  # location_id - Integer - MUST match a primary key from locations table
   #
   # Returns nothing
-  def self.new(shoe_name, cost, color, category_id, location_id)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id) VALUES ('#{shoe_name}', #{cost}, '#{color}', #{category_id}, #{location_id});")
+  def self.add(shoe_name, cost, color)
+    DATABASE.execute("INSERT INTO shoes (name, cost, color) VALUES ('#{shoe_name}', #{cost}, '#{color}');")
   end
 
   # Read method for the shoes table
@@ -25,6 +23,69 @@ class Shoe
   # Returns all data from the shoes table
   def self.all
     DATABASE.execute("SELECT * FROM shoes;")
+  end
+
+  # Read method for a single shoe product (row) in the shoes table
+  #
+  # Returns row of information
+  def information
+    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
+  end
+
+  # Update any value for a given field that takes Strings
+  #
+  # field_name - String
+  # new_value - String
+  #
+  # Returns nothing
+  def update_strings(field_name, new_value)
+    DATABASE.execute("UPDATE shoes SET #{field_name} = '#{new_value}' WHERE id = #{@id};")
+  end
+
+  # Update any value for a given field that takes Integers
+  #
+  # field_name - String
+  # new_value - Integer
+  #
+  # Returns nothing
+  def update_integers(field_name, new_value)
+    DATABASE.execute("UPDATE shoes SET #{field_name} = #{new_value} WHERE id = #{@id};")
+  end
+
+  # Updates the name value in the shoes table
+  #
+  # new_name - String
+  #
+  # Returns nothing
+  def update_name(new_name)
+    update_strings(name, new_name)
+  end
+
+  # Updates the cost value in the shoes table
+  #
+  # new_cost - Integer
+  #
+  # Returns nothing
+  def update_cost(new_cost)
+    update_integers(cost, new_cost)
+  end
+
+  # Updates the color value in the shoes table
+  #
+  # new_color - String
+  #
+  # Returns nothing
+  def update_color(new_color)
+    update_strings(color, new_color)
+  end
+
+  # Method needed to update location_id MUST be in location_id range?
+
+  # Method needed to update category_id MUST be in category_id range?
+
+  # Deletes a shoe row from the shoes table
+  def delete
+    DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
   end
 
 end

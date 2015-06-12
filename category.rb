@@ -12,7 +12,7 @@ class Category
   # category_name - String
   #
   # Returns nothing
-  def self.new(category_name)
+  def self.add(category_name)
     DATABASE.execute("INSERT INTO categories (name) VALUES ('#{category_name}');")
   end
 
@@ -21,6 +21,13 @@ class Category
   # Returns all data from the categories table
   def self.all
     DATABASE.execute("SELECT * FROM categories;")
+  end
+
+  # Reads all shoes in a category object
+  #
+  # Returns all shoes (rows) at that category from the shoes table
+  def shoes
+    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
 
   # Update method for the categories table
