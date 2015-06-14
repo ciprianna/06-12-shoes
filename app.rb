@@ -261,20 +261,95 @@ while choice != 0
 
   if choice == 7
     puts "What would you like to do?"
+    40.times {print "-"}
+    puts "\n"
     puts "1".ljust(10) + "View all categories".rjust(30)
     puts "2".ljust(10) + "View all products in a category".rjust(30)
-    puts "3".ljust(10) + "Change category information".rjust(30)
+    puts "3".ljust(10) + "Change category name".rjust(30)
     puts "4".ljust(10) + "Add new category".rjust(30)
     puts "5".ljust(10) + "Delete category".rjust(30)
     puts "0".ljust(10) + "Exit category information".rjust(30)
-    category_choice
+    category_choice = gets.to_i
 
     range_for_categories = [0, 1, 2, 3, 4, 5]
     while range_for_categories.include?(category_choice) == false
       puts "Please choose a number from the menu"
       category_choice = gets.to_i
     end
-    
+
+    while category_choice != 0
+
+      if category_choice == 1
+        puts "Categories:"
+        Category.all.each do |categories_hash|
+          puts "#{categories_hash['id']} - #{categories_hash['name']}"
+        end
+      end
+
+      if category_choice == 2
+        puts "Which category would you like to view products in?"
+        Category.all.each do |category_hash|
+          puts "#{category_hash['id']} - #{category_hash['name']}"
+        end
+        category = gets.to_i
+        category_to_view = Category.new(category)
+        category_to_view.shoes.each do |shoes_hash|
+          puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+        end
+      end
+
+      if category_choice == 3
+        puts "Which category would you like to change the name of?"
+        Category.all.each do |category_hash|
+          puts "#{category_hash['id']} - #{category_hash['name']}"
+        end
+        category = gets.to_i
+        category_to_change = Category.new(category)
+
+        puts "What is the new name of this category?"
+        new_category_name = gets.chomp
+
+        category_to_change.update(new_category_name)
+      end
+
+      if category_choice == 4
+        puts "What's the name of the new category?"
+        new_category = gets.chomp
+        Category.add(new_category)
+      end
+
+      if category_choice == 5
+        puts "Which category would you like to delete?"
+        Category.all.each do |category_hash|
+          puts "#{category_hash['id']} - #{category_hash['name']}"
+        end
+        category = gets.to_i
+        category_to_delete = Category.new(category)
+
+        if category_to_delete.shoes == []
+          category_to_delete.delete
+          puts "Category deleted"
+        else
+          puts "Cannot delete this category while shoes are assigned."
+          category_to_delete.shoes.each do |shoes_hash|
+            puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+          end
+        end
+      end
+
+      puts "What would you like to do?"
+      40.times {print "-"}
+      puts "\n"
+      puts "1".ljust(10) + "View all categories".rjust(30)
+      puts "2".ljust(10) + "View all products in a category".rjust(30)
+      puts "3".ljust(10) + "Change category name".rjust(30)
+      puts "4".ljust(10) + "Add new category".rjust(30)
+      puts "5".ljust(10) + "Delete category".rjust(30)
+      puts "0".ljust(10) + "Exit category information".rjust(30)
+      category_choice = gets.to_i
+
+    end
+
   end
 
   puts "What would you like to do with the Cutsie Bootsie Inventory?"

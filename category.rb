@@ -36,7 +36,7 @@ class Category
   #
   # Returns nothing
   def update(new_category_name)
-    DATABASE.execute("UPDATE categories SET name = #{new_category_name} WHERE id = #{@id};")
+    DATABASE.execute("UPDATE categories SET name = '#{new_category_name}' WHERE id = #{@id};")
   end
 
   # Delete a category from the categories table
