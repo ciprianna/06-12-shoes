@@ -14,8 +14,8 @@ class Shoe
   # color - String
   #
   # Returns nothing
-  def self.add(shoe_name, cost, color)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color) VALUES ('#{shoe_name}', #{cost}, '#{color}');")
+  def self.add(shoe_name, cost, color, category_id, location_id, quantity)
+    DATABASE.execute("INSERT INTO shoes (name, cost, color) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
   end
 
   # Read method for the shoes table
@@ -79,9 +79,32 @@ class Shoe
     update_strings(color, new_color)
   end
 
-  # Method needed to update location_id MUST be in location_id range?
+################################# Put list before using
+  # Assigns/updates the location_id of a shoe instance
+  #
+  # new_location_id - Integer
+  #
+  # Returns nothing
+  def update_location(new_location_id, quantity)
+    update_integers(location_id, new_location_id)
+    update_quantity(quantity)
+  end
 
-  # Method needed to update category_id MUST be in category_id range?
+  # Updates the quantity of a product for a given id
+  def update_quantity(to_add)
+    #current_quantity = DATABASE.execute("SELECT location_stock WHERE id = #{@id};")
+    DATABASE.execute("UPDATE shoes SET location_stock = location_stock + #{to_add};")
+  end
+
+################################# Put list before using
+  # Assigns/updates the category_id of a shoe instance
+  #
+  # new_category_id - Integer
+  #
+  # Returns nothing
+  def update_category(new_category_id)
+    update_integers(category_id, new_category_id)
+  end
 
   # Deletes a shoe row from the shoes table
   def delete
