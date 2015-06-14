@@ -352,6 +352,25 @@ while choice != 0
 
   end
 
+  if choice == 8
+    puts "Which product would you like to delete?"
+    Shoe.all.each do |shoe_hash|
+      puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
+    end
+    shoe_choice = gets.to_i
+    shoe_to_delete = Shoe.new(shoe_choice)
+
+    puts shoe_to_delete.information
+
+    puts "Are you sure you wish to delete this product? (yes/no)"
+    sure = gets.chomp.downcase
+
+    if sure == "yes"
+      shoe_to_delete.delete
+    end
+
+  end
+
   puts "What would you like to do with the Cutsie Bootsie Inventory?"
   60.times {print "-"}
   puts "\n"
