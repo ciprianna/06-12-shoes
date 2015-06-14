@@ -32,6 +32,13 @@ class Shoe
     DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
 
+  # Read method for stock quantities
+  #
+  # Returns products and quantity
+  def quantity
+    DATABASE.execute("SELECT id, name, quantity FROM shoes;")
+  end
+
   # Update any value for a given field that takes Strings
   #
   # field_name - String
@@ -79,7 +86,6 @@ class Shoe
     update_strings(color, new_color)
   end
 
-################################# Put list before using
   # Assigns/updates the location_id of a shoe instance
   #
   # new_location_id - Integer
@@ -96,7 +102,6 @@ class Shoe
     DATABASE.execute("UPDATE shoes SET location_stock = location_stock + #{to_add};")
   end
 
-################################# Put list before using
   # Assigns/updates the category_id of a shoe instance
   #
   # new_category_id - Integer
