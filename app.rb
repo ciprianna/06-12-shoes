@@ -19,7 +19,7 @@ DATABASE.results_as_hash = true
 ##############################
 
 puts "What would you like to do with the Cutesie Bootsie Inventory?"
-50.times do print "-" end
+60.times {print "-"}
 puts "\n"
 puts "1".ljust(10) + "View current stock".rjust(30)
 puts "2".ljust(10) + "Add new product".rjust(30)
@@ -37,7 +37,7 @@ range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
 while range.include?(choice) == false
   puts "Please choose a number from the menu"
-  choice = gets.chomp
+  choice = gets.to_i
 end
 
 while choice != 0
@@ -107,6 +107,12 @@ while choice != 0
     puts "0".ljust(10) + "Exit product update".rjust(30)
     to_update = gets.to_i
 
+    range_for_updates = [0, 1, 2, 3, 4, 5]
+    while range_for_updates.include?(to_update) == false
+      puts "Please choose a number from the menu"
+      to_update = gets.to_i
+    end
+
     while to_update != 0
 
       if to_update == 1
@@ -160,33 +166,50 @@ while choice != 0
 
   if choice == 6
     puts "What would you like to do?"
-    puts "1".ljust(10) + "View all products at a location".rjust(30)
-    puts "2".ljust(10) + "Change location name".rjust(30)
-    puts "3".ljust(10) + "Add new location".rjust(30)
-    puts "4".ljust(10) + "Delete location".rjust(30)
+    40.times {print "-"}
+    puts "\n"
+    puts "1".ljust(10) + "View all locations".rjust(30)
+    puts "2".ljust(10) + "View all products at a location".rjust(30)
+    puts "3".ljust(10) + "Change location name".rjust(30)
+    puts "4".ljust(10) + "Add new location".rjust(30)
+    puts "5".ljust(10) + "Delete location".rjust(30)
     puts "0".ljust(10) + "Exit location information".rjust(30)
-
     location_choice = gets.to_i
+
+    range_for_locations = [0, 1, 2, 3, 4, 5]
+    while range_for_locations.include?(location_choice) == false
+      puts "Please choose a number from the menu"
+      location_choice = gets.to_i
+    end
 
     while location_choice != 0
 
       if location_choice == 1
+        puts "Locations:"
+        Location.all.each do |location_hash|
+          puts "#{location_hash['id']} - #{location_hash['name']}"
+        end
+      end
+
+      if location_choice == 2
         puts "Which location would you like to view products at?"
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
         location = gets.to_i
-        location_to_view = Location.new
-        location_to_view.shoes
+        location_to_view = Location.new(location)
+        location_to_view.shoes.each do |shoes_hash|
+          puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+        end
       end
 
-      if location_choice == 2
+      if location_choice == 3
         puts "Which location would you like to change the name of?"
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
         location = gets.to_i
-        location_to_change = Location.new
+        location_to_change = Location.new(location)
 
         puts "What is the new name of this location?"
         new_location_name = gets.chomp
@@ -194,34 +217,40 @@ while choice != 0
         location_to_change.update(new_location_name)
       end
 
-      if location_choice == 3
+      if location_choice == 4
         puts "What's the name of the new location?"
         new_location = gets.chomp
         Location.add(new_location)
       end
 
-      if location_to_change == 4
+      if location_choice == 5
         puts "Which location would you like to delete?"
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
         location = gets.to_i
-        location_to_delete = Location.new
+        location_to_delete = Location.new(location)
 
-        if location_to_delete.shoes.length != 0
-          puts "Cannot delete this location while shoes are stored here."
-          location_to_delete.shoes
-        else
+        if location_to_delete.shoes == []
           location_to_delete.delete
+          puts "Location deleted"
+        else
+          puts "Cannot delete this location while shoes are stored here."
+          location_to_delete.shoes.each do |shoes_hash|
+            puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+          end
         end
 
       end
 
       puts "What would you like to do?"
-      puts "1".ljust(10) + "View all products at a location".rjust(30)
-      puts "2".ljust(10) + "Change location name".rjust(30)
-      puts "3".ljust(10) + "Add new location".rjust(30)
-      puts "4".ljust(10) + "Delete location".rjust(30)
+      40.times {print "-"}
+      puts "\n"
+      puts "1".ljust(10) + "View all locations".rjust(30)
+      puts "2".ljust(10) + "View all products at a location".rjust(30)
+      puts "3".ljust(10) + "Change location name".rjust(30)
+      puts "4".ljust(10) + "Add new location".rjust(30)
+      puts "5".ljust(10) + "Delete location".rjust(30)
       puts "0".ljust(10) + "Exit location information".rjust(30)
 
       location_choice = gets.to_i
@@ -232,15 +261,24 @@ while choice != 0
 
   if choice == 7
     puts "What would you like to do?"
-    puts "1".ljust(10) + "View all products in a category".rjust(30)
-    puts "2".ljust(10) + "Change category information".rjust(30)
-    puts "3".ljust(10) + "Add new category".rjust(30)
-    puts "4".ljust(10) + "Delete category".rjust(30)
+    puts "1".ljust(10) + "View all categories".rjust(30)
+    puts "2".ljust(10) + "View all products in a category".rjust(30)
+    puts "3".ljust(10) + "Change category information".rjust(30)
+    puts "4".ljust(10) + "Add new category".rjust(30)
+    puts "5".ljust(10) + "Delete category".rjust(30)
     puts "0".ljust(10) + "Exit category information".rjust(30)
+    category_choice
+
+    range_for_categories = [0, 1, 2, 3, 4, 5]
+    while range_for_categories.include?(category_choice) == false
+      puts "Please choose a number from the menu"
+      category_choice = gets.to_i
+    end
+    
   end
 
   puts "What would you like to do with the Cutsie Bootsie Inventory?"
-  50.times do print "-" end
+  60.times {print "-"}
   puts "\n"
   puts "1".ljust(10) + "View current stock".rjust(30)
   puts "2".ljust(10) + "Add new product".rjust(30)

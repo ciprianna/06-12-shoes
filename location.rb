@@ -44,7 +44,7 @@ class Location
   # Returns nothing
   def delete
     # INSERT check for current items of said category
-    DATABASE.execute("DELETE FROM categories WHERE id = #{@id}")
+    DATABASE.execute("DELETE FROM locations WHERE id = #{@id}")
   end
 
 end
