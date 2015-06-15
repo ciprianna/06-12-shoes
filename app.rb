@@ -16,7 +16,7 @@ DATABASE.execute("CREATE TABLE IF NOT EXISTS locations (id INTEGER PRIMARY KEY, 
 # Returns the results as a Hash
 DATABASE.results_as_hash = true
 
-####################################################################
+################################################################################
 
 # Main menu in ux to get an initial choice from the user
 puts "What would you like to do with the Cutesie Bootsie Inventory?"
@@ -36,10 +36,6 @@ print ">> "
 choice = gets.to_i
 
 # Loop to get a valid response from the user
-#
-# choice - user's input
-#
-# Returns the statement, if needed; otherwise returns nothing
 range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
 while !range.include?(choice)
@@ -52,13 +48,13 @@ end
 #   If zero, it skips the loop entirely and exits the program.
 while choice != 0
 
-##### Displays all products------------------------------------------
+##### Displays all products-----------------------------------------------------
   if choice == 1
     Shoe.all.each do |shoe_hash|
     puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
     end
   end
-##### Quantity information menu; gives a list of sub-options---------
+##### Quantity information menu; gives a list of sub-options--------------------
   if choice == 2
     puts "What would you like to do?"
     40.times {print "-"}
@@ -79,7 +75,7 @@ while choice != 0
 
     while quantity_choice != 0
 
-      ##### Views all stock quantities-------------------------------
+      ##### Views all stock quantities------------------------------------------
       if quantity_choice == 1
         Shoe.quantity.each do |shoe_hash|
           puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
@@ -89,14 +85,14 @@ while choice != 0
         puts "Total stock quantity - #{total_stock[0][0]}"
       end
 
-      ##### Shows all items where_quantity_is_low--------------------
+      ##### Shows all items where_quantity_is_low-------------------------------
       if quantity_choice == 2
         Shoe.where_quantity_is_low.each do |shoe_hash|
           puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
         end
       end
 
-      ##### Updates an item's quantity-------------------------------
+      ##### Updates an item's quantity------------------------------------------
       if quantity_choice == 3
         puts "Which product quantity would you like to update?"
         quantity_range = []
@@ -122,7 +118,7 @@ while choice != 0
         shoe.update_quantity(change)
       end
 
-      ##### Re-asks for the menu options-----------------------------
+      ##### Re-asks for the menu options----------------------------------------
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -136,7 +132,7 @@ while choice != 0
     end
   end
 
-##### Adds a new item to the inventory-------------------------------
+##### Adds a new item to the inventory------------------------------------------
   if choice == 3
     puts "Okay, please enter the product information."
     puts "Shoe name:"
@@ -184,7 +180,7 @@ while choice != 0
     Shoe.add(name, cost, color, category_id, location_id, quantity)
   end
 
-##### Updates a product's information--------------------------------
+##### Updates a product's information-------------------------------------------
   if choice == 4
     puts "Which product would you like to update?"
     shoe_range = []
@@ -203,12 +199,12 @@ while choice != 0
 
     shoe_to_change = Shoe.new(shoe)
 
-    ##### Displays all information pertaining to the selected shoe--
+    ##### Displays all information pertaining to the selected shoe--------------
     shoe_to_change.information.each do |shoe_hash|
       puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
     end
 
-    ##### Sub-menu for updating-------------------------------------
+    ##### Sub-menu for updating-------------------------------------------------
     puts "And what would you like to update?"
     40.times {print "-"}
     puts "\n"
@@ -231,7 +227,7 @@ while choice != 0
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while to_update != 0
 
-      ##### Updates the name of the shoe----------------------------
+      ##### Updates the name of the shoe----------------------------------------
       if to_update == 1
         puts "What is the new name for this shoe?"
         print ">> "
@@ -239,7 +235,7 @@ while choice != 0
         shoe_to_change.update_name(new_name)
       end
 
-      ##### Updates the cost of the shoe----------------------------
+      ##### Updates the cost of the shoe----------------------------------------
       if to_update == 2
         puts "What is the new cost for this shoe?"
         print ">> "
@@ -247,7 +243,7 @@ while choice != 0
         shoe_to_change.update_cost(new_cost)
       end
 
-      ##### Updates the color of the shoe---------------------------
+      ##### Updates the color of the shoe---------------------------------------
       if to_update == 3
         puts "What is the new color of the shoe?"
         print ">> "
@@ -255,7 +251,7 @@ while choice != 0
         shoe_to_change.update_color(new_color)
       end
 
-      ##### Updates the category_id of the shoe---------------------
+      ##### Updates the category_id of the shoe---------------------------------
       if to_update == 4
         puts "What is the new category of the shoe?"
         category_range = []
@@ -275,7 +271,7 @@ while choice != 0
         shoe_to_change.update_category(new_category_id)
       end
 
-      ##### Updates the location_id of the shoe----------------------
+      ##### Updates the location_id of the shoe---------------------------------
       if to_update == 5
         puts "What location is this shoe moving to?"
         location_range = []
@@ -295,7 +291,7 @@ while choice != 0
         shoe_to_change.update_location(new_location_id)
       end
 
-      ##### Re-asks what option the user would like to choose
+      ##### Re-asks what option the user would like to choose-------------------
       puts "Is there anything else to update for this product?"
       40.times {print "-"}
       puts "\n"
@@ -312,7 +308,7 @@ while choice != 0
 
   end
 
-##### Displays information by pricing category-------------------------
+##### Displays information by pricing category----------------------------------
   if choice == 5
     puts "Which pricing category would you like to see?"
     puts "High - $100+"
@@ -333,7 +329,7 @@ while choice != 0
     end
   end
 
-##### Displays options for the locations menu-------------------------
+##### Displays options for the locations menu-----------------------------------
   if choice == 6
     puts "What would you like to do?"
     40.times {print "-"}
@@ -357,7 +353,7 @@ while choice != 0
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while location_choice != 0
 
-      ##### Displays all locations-----------------------------------
+      ##### Displays all locations----------------------------------------------
       if location_choice == 1
         puts "Locations:"
         Location.all.each do |location_hash|
@@ -365,7 +361,7 @@ while choice != 0
         end
       end
 
-      ##### Displays all products at an instance of a location-------
+      ##### Displays all products at an instance of a location------------------
       if location_choice == 2
         puts "Which location would you like to view products at?"
         location_range = []
@@ -388,7 +384,7 @@ while choice != 0
         end
       end
 
-      ##### Changes the name of a location--------------------------
+      ##### Changes the name of a location--------------------------------------
       if location_choice == 3
         puts "Which location would you like to change the name of?"
         location_range = []
@@ -414,7 +410,7 @@ while choice != 0
         location_to_change.update(new_location_name)
       end
 
-      ##### Adds a new location-------------------------------------
+      ##### Adds a new location-------------------------------------------------
       if location_choice == 4
         puts "What's the name of the new location?"
         print ">> "
@@ -441,8 +437,9 @@ while choice != 0
 
         location_to_delete = Location.new(location)
 
-        if location_to_delete.shoes == []
-          location_to_delete.delete
+        location_to_delete.delete
+
+        if location_to_delete.empty?
           puts "Location deleted"
         else
           puts "Cannot delete this location while shoes are stored here."
@@ -453,7 +450,7 @@ while choice != 0
 
       end
 
-      ##### Re-asks the user to input an option---------------------
+      ##### Re-asks the user to input an option---------------------------------
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -470,7 +467,7 @@ while choice != 0
 
   end
 
-##### Displays the options in the Category Menu----------------------
+##### Displays the options in the Category Menu---------------------------------
   if choice == 7
     puts "What would you like to do?"
     40.times {print "-"}
@@ -494,7 +491,7 @@ while choice != 0
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while category_choice != 0
 
-      ##### Displays all categories---------------------------------
+      ##### Displays all categories---------------------------------------------
       if category_choice == 1
         puts "Categories:"
         Category.all.each do |categories_hash|
@@ -502,7 +499,7 @@ while choice != 0
         end
       end
 
-      ##### Displays all products in a category instance------------
+      ##### Displays all products in a category instance------------------------
       if category_choice == 2
         puts "Which category would you like to view products in?"
         category_range = []
@@ -525,7 +522,7 @@ while choice != 0
         end
       end
 
-      ##### Changes the name of a category--------------------------
+      ##### Changes the name of a category--------------------------------------
       if category_choice == 3
         puts "Which category would you like to change the name of?"
         category_range = []
@@ -551,7 +548,7 @@ while choice != 0
         category_to_change.update(new_category_name)
       end
 
-      ##### Adds a new category--------------------------------------
+      ##### Adds a new category-------------------------------------------------
       if category_choice == 4
         puts "What's the name of the new category?"
         print ">> "
@@ -560,7 +557,7 @@ while choice != 0
       end
 
       ##### Deletes a category after checking to ensure no products are assigned
-      #####   to that category----------------------------------------
+      #####   to that category--------------------------------------------------
       if category_choice == 5
         puts "Which category would you like to delete?"
         category_range = []
@@ -579,8 +576,9 @@ while choice != 0
 
         category_to_delete = Category.new(category)
 
-        if category_to_delete.shoes == []
-          category_to_delete.delete
+        category_to_delete.delete
+
+        if category_to_delete.empty?
           puts "Category deleted"
         else
           puts "Cannot delete this category while shoes are assigned."
@@ -590,7 +588,7 @@ while choice != 0
         end
       end
 
-      ##### Re-asks the user for an option----------------------------
+      ##### Re-asks the user for an option--------------------------------------
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -607,14 +605,23 @@ while choice != 0
 
   end
 
-##### Deletes a product from the inventory----------------------------
+##### Deletes a product from the inventory--------------------------------------
   if choice == 8
     puts "Which product would you like to delete?"
+    shoe_range = []
     Shoe.all.each do |shoe_hash|
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
+      shoe_range.push(shoe_hash['id'])
     end
     print ">> "
     shoe_choice = gets.to_i
+
+    while !shoe_range.include?(shoe_choice)
+      puts "Please choose an id from the menu:"
+      print ">> "
+      shoe_choice = gets.to_i
+    end
+
     shoe_to_delete = Shoe.new(shoe_choice)
 
     shoe_to_delete.information.each do |shoe_hash|
@@ -631,7 +638,7 @@ while choice != 0
 
   end
 
-##### Re-asks the user for an option-------------------------------
+##### Re-asks the user for an option--------------------------------------------
   60.times {print "-"}
   puts "\n"
   puts "What would you like to do with the Cutesie Bootsie Inventory?"

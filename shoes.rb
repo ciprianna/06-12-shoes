@@ -20,28 +20,30 @@ class Shoe
   # location_id - Integer, foreign key from the locations table
   # quantity - Integer, to be added to the location_stock column
   #
-  # Returns nothing
+  # Returns an empty Array
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
     DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
   end
 
   # Read method for the shoes table
   #
-  # Returns all data from the shoes table
+  # Returns all rows from the shoes table as an Array of Hashes. Each Hash is
+  #   a row of data.
   def self.all
     DATABASE.execute("SELECT * FROM shoes;")
   end
 
   # Read method for stock quantities
   #
-  # Returns products and quantity
+  # Returns id - Integer, name - String, and location_stock - Integer, from
+  #   shoes table as an Array of Hashes. Each Hash corresponds to a row of data.
   def self.quantity
     DATABASE.execute("SELECT id, name, location_stock FROM shoes;")
   end
 
   # Sums all of the product inventory
   #
-  # Returns the total inventory - Integer
+  # Returns the sum of all location_stock values - Integer
   def self.total_stock
     DATABASE.execute("SELECT SUM(location_stock) FROM shoes;")
   end
@@ -50,7 +52,9 @@ class Shoe
   #
   # cost_category - String, should be categories of high, medium, or low
   #
-  # Returns all product information for products within the given range
+  # Returns all row information where the condition is true as an Array of
+  #   Hashes. Each Hash corresponds to a row of data in the shoes table that
+  #   meets the criteria in the WHERE statement.
   def self.where_cost(cost_category)
     if cost_category == "high"
       DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100;")
@@ -63,14 +67,17 @@ class Shoe
 
   # Reads all products with low quantities in location_stock.
   #
-  # Returns all product information for products with quantities < 5
+  # Returns all row information, for only rows where location_stock is less than
+  #   5, as an Array of Hashes. Each Hash corresponds to a row of data in the
+  #   shoes table that meets the criteria in the WHERE statement.
   def self.where_quantity_is_low
     DATABASE.execute("SELECT * FROM shoes WHERE location_stock < 5;")
   end
 
   # Read method for a single shoe product (row) in the shoes table
   #
-  # Returns row of information
+  # Returns row of information as an Array with a single Hash. The Hash
+  #   corresponds to the row of data that matches the given id.
   def information
     DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
@@ -80,7 +87,7 @@ class Shoe
   # field_name - String
   # new_value - String
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_strings(field_name, new_value)
     DATABASE.execute("UPDATE shoes SET #{field_name} = '#{new_value}' WHERE id = #{@id};")
   end
@@ -90,7 +97,7 @@ class Shoe
   # field_name - String
   # new_value - Integer
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_integers(field_name, new_value)
     DATABASE.execute("UPDATE shoes SET #{field_name} = #{new_value} WHERE id = #{@id};")
   end
@@ -99,7 +106,7 @@ class Shoe
   #
   # new_name - String
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_name(new_name)
     update_strings("name", new_name)
   end
@@ -108,7 +115,7 @@ class Shoe
   #
   # new_cost - Integer
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_cost(new_cost)
     update_integers("cost", new_cost)
   end
@@ -117,7 +124,7 @@ class Shoe
   #
   # new_color - String
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_color(new_color)
     update_strings("color", new_color)
   end
@@ -126,7 +133,7 @@ class Shoe
   #
   # new_location_id - Integer
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_location(new_location_id)
     update_integers("location_id", new_location_id)
   end
@@ -135,7 +142,7 @@ class Shoe
   #
   # to_add - Integer
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_quantity(to_add)
     current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first['location_stock']
     DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity + to_add} WHERE id = #{@id};")
@@ -145,14 +152,14 @@ class Shoe
   #
   # new_category_id - Integer
   #
-  # Returns nothing
+  # Returns an empty Array
   def update_category(new_category_id)
     update_integers("category_id", new_category_id)
   end
 
   # Deletes a shoe row from the shoes table
   #
-  # Returns nothing
+  # Returns an empty Array
   def delete
     DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
   end
