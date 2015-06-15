@@ -137,6 +137,8 @@ class Shoe
   end
 
   # Deletes a shoe row from the shoes table
+  #
+  # Returns nothing
   def delete
     DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
   end

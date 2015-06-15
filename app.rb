@@ -445,7 +445,7 @@ while choice != 0
 
   60.times {print "-"}
   puts "\n"
-  puts "What would you like to do with the Cutsie Bootsie Inventory?"
+  puts "What would you like to do with the Cutesie Bootsie Inventory?"
   60.times {print "-"}
   puts "\n"
   puts "1".ljust(10) + "View current stock".rjust(30)
