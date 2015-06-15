@@ -3,6 +3,10 @@
 class Category
 
   # Assigns an id for identification in instance methods
+  #
+  # id - Integer assigned as the primary key from the id column
+  #
+  # Returns object created
   def initialize(id)
     @id = id
   end
@@ -43,8 +47,7 @@ class Category
   #
   # Returns nothing
   def delete
-    # INSERT check for current items of said category
-    DATABASE.execute("DELETE FROM categories WHERE id = #{@id}")
+    DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
   end
 
 end

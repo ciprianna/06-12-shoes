@@ -3,6 +3,10 @@
 class Shoe
 
   # Assigns an id for identification in instance methods
+  #
+  # id - Integer assigned as the primary key from the id column
+  #
+  # Returns object created
   def initialize(id)
     @id = id
   end
@@ -12,6 +16,9 @@ class Shoe
   # shoe_name - String
   # cost - Integer
   # color - String
+  # category_id - Integer, foreign key from the categories table
+  # location_id - Integer, foreign key from the locations table
+  # quantity - Integer, to be added to the location_stock column
   #
   # Returns nothing
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
@@ -23,13 +30,6 @@ class Shoe
   # Returns all data from the shoes table
   def self.all
     DATABASE.execute("SELECT * FROM shoes;")
-  end
-
-  # Read method for a single shoe product (row) in the shoes table
-  #
-  # Returns row of information
-  def information
-    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
 
   # Read method for stock quantities
@@ -50,15 +50,29 @@ class Shoe
   #
   # cost_category - String, should be categories of high, medium, or low
   #
-  # Returns products within the given range
+  # Returns all product information for products within the given range
   def self.where_cost(cost_category)
     if cost_category == "high"
-      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100")
+      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100;")
     elsif cost_category == "medium"
-      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 50 AND cost < 100")
+      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 50 AND cost < 100;")
     else
-      DATABASE.execute("SELECT * FROM shoes WHERE cost < 50")
+      DATABASE.execute("SELECT * FROM shoes WHERE cost < 50;")
     end
+  end
+
+  # Reads all products with low quantities in location_stock.
+  #
+  # Returns all product information for products with quantities < 5
+  def self.where_quantity_is_low
+    DATABASE.execute("SELECT * FROM shoes WHERE location_stock < 5;")
+  end
+
+  # Read method for a single shoe product (row) in the shoes table
+  #
+  # Returns row of information
+  def information
+    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
   end
 
   # Update any value for a given field that takes Strings
