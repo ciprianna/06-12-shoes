@@ -15,7 +15,7 @@ class Shoe
   #
   # Returns nothing
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
+    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
   end
 
   # Read method for the shoes table
@@ -35,8 +35,15 @@ class Shoe
   # Read method for stock quantities
   #
   # Returns products and quantity
-  def quantity
-    DATABASE.execute("SELECT id, name, quantity FROM shoes;")
+  def self.quantity
+    DATABASE.execute("SELECT id, name, location_stock FROM shoes;")
+  end
+
+  # Sums all of the product inventory
+  #
+  # Returns the total inventory - Integer
+  def self.total_stock
+    DATABASE.execute("SELECT SUM(location_stock) FROM shoes;")
   end
 
   # Update any value for a given field that takes Strings
@@ -65,7 +72,7 @@ class Shoe
   #
   # Returns nothing
   def update_name(new_name)
-    update_strings(name, new_name)
+    update_strings("name", new_name)
   end
 
   # Updates the cost value in the shoes table
@@ -74,7 +81,7 @@ class Shoe
   #
   # Returns nothing
   def update_cost(new_cost)
-    update_integers(cost, new_cost)
+    update_integers("cost", new_cost)
   end
 
   # Updates the color value in the shoes table
@@ -83,7 +90,7 @@ class Shoe
   #
   # Returns nothing
   def update_color(new_color)
-    update_strings(color, new_color)
+    update_strings("color", new_color)
   end
 
   # Assigns/updates the location_id of a shoe instance
@@ -91,12 +98,15 @@ class Shoe
   # new_location_id - Integer
   #
   # Returns nothing
-  def update_location(new_location_id, quantity)
-    update_integers(location_id, new_location_id)
-    update_quantity(quantity)
+  def update_location(new_location_id)
+    update_integers("location_id", new_location_id)
   end
 
   # Updates the quantity of a product for a given id
+  #
+  # to_add - Integer
+  #
+  # Returns nothing
   def update_quantity(to_add)
     #current_quantity = DATABASE.execute("SELECT location_stock WHERE id = #{@id};")
     DATABASE.execute("UPDATE shoes SET location_stock = location_stock + #{to_add};")
@@ -108,7 +118,7 @@ class Shoe
   #
   # Returns nothing
   def update_category(new_category_id)
-    update_integers(category_id, new_category_id)
+    update_integers("category_id", new_category_id)
   end
 
   # Deletes a shoe row from the shoes table

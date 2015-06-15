@@ -43,7 +43,7 @@ end
 while choice != 0
 
   if choice == 1
-    Shoe.all
+    puts Shoe.all
   end
 
   if choice == 2
@@ -70,7 +70,11 @@ while choice != 0
   end
 
   if choice == 3
-    Shoe.quantity
+    Shoe.quantity.each do |shoe_hash|
+      puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
+    end
+    total_stock = Shoe.total_stock
+    puts "Total stock quantity - #{total_stock[0][0]}"
   end
 
   if choice == 4
@@ -96,9 +100,11 @@ while choice != 0
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
     end
     shoe = gets.to_i
-    shoe_to_change = Shoe.new
+    shoe_to_change = Shoe.new(shoe)
 
     puts "And what would you like to update?"
+    40.times {print "-"}
+    puts "\n"
     puts "1".ljust(10) + "Name".rjust(30)
     puts "2".ljust(10) + "Cost".rjust(30)
     puts "3".ljust(10) + "Color".rjust(30)
