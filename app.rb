@@ -22,19 +22,20 @@ puts "What would you like to do with the Cutesie Bootsie Inventory?"
 60.times {print "-"}
 puts "\n"
 puts "1".ljust(10) + "View current stock".rjust(30)
-puts "2".ljust(10) + "Add new product".rjust(30)
-puts "3".ljust(10) + "View stock quantities".rjust(30)
-puts "4".ljust(10) + "Update stock quantity".rjust(30)
+puts "2".ljust(10) + "View stock quantities".rjust(30)
+puts "3".ljust(10) + "Update stock quantity".rjust(30)
+puts "4".ljust(10) + "Add new product".rjust(30)
 puts "5".ljust(10) + "Update product information".rjust(30)
-puts "6".ljust(10) + "View location information".rjust(30)
-puts "7".ljust(10) + "View category information".rjust(30)
-puts "8".ljust(10) + "Delete product".rjust(30)
+puts "6".ljust(10) + "View products by cost".rjust(30)
+puts "7".ljust(10) + "View location information".rjust(30)
+puts "8".ljust(10) + "View category information".rjust(30)
+puts "9".ljust(10) + "Delete product".rjust(30)
 puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
 
 print ">> "
 choice = gets.to_i
 
-range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 0]
 
 while range.include?(choice) == false
   puts "Please choose a number from the menu"
@@ -51,6 +52,32 @@ while choice != 0
   end
 
   if choice == 2
+    Shoe.quantity.each do |shoe_hash|
+      puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
+    end
+    total_stock = Shoe.total_stock
+    puts "Total stock quantity - #{total_stock[0][0]}"
+  end
+
+  if choice == 3
+    puts "Which product quantity would you like to update?"
+    Shoe.all.each do |shoe_hash|
+      puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
+    end
+    print ">> "
+    shoe_to_change = gets.to_i
+
+    shoe = Shoe.new(shoe_to_change)
+
+    puts "Okay, and how many are you adding? If removing quantity, enter a negative number."
+    print ">> "
+    change = gets.to_i
+
+    shoe.update_quantity(change)
+
+  end
+
+  if choice == 4
     puts "Okay, please enter the product information."
     puts "Shoe name:"
     print ">> "
@@ -79,32 +106,6 @@ while choice != 0
     Shoe.add(name, cost, color, category_id, location_id, quantity)
   end
 
-  if choice == 3
-    Shoe.quantity.each do |shoe_hash|
-      puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
-    end
-    total_stock = Shoe.total_stock
-    puts "Total stock quantity - #{total_stock[0][0]}"
-  end
-
-  if choice == 4
-    puts "Which product quantity would you like to update?"
-    Shoe.all.each do |shoe_hash|
-      puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
-    end
-    print ">> "
-    shoe_to_change = gets.to_i
-
-    shoe = Shoe.new(shoe_to_change)
-
-    puts "Okay, and how many are you adding? If removing quantity, enter a negative number."
-    print ">> "
-    change = gets.to_i
-
-    shoe.update_quantity(change)
-
-  end
-
   if choice == 5
     puts "Which product would you like to update?"
     Shoe.all.each do |shoe_hash|
@@ -113,6 +114,10 @@ while choice != 0
     print ">> "
     shoe = gets.to_i
     shoe_to_change = Shoe.new(shoe)
+
+    shoe_to_change.information.each do |shoe_hash|
+      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    end
 
     puts "And what would you like to update?"
     40.times {print "-"}
@@ -193,6 +198,26 @@ while choice != 0
   end
 
   if choice == 6
+    puts "Which pricing category would you like to see?"
+    puts "High - $100+"
+    puts "Medium - $50-$99"
+    puts "Low - $0-$49"
+    print ">> "
+    pricing_category = gets.chomp.downcase
+
+    while (pricing_category != "high") && (pricing_category != "medium") && (pricing_category != "low")
+      puts "Please select 'high', 'medium', or 'low':"
+      print ">> "
+      pricing_category = gets.chomp.downcase
+    end
+
+    shoes_by_price = Shoe.where_cost(pricing_category)
+    shoes_by_price.each do |shoe_hash|
+      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    end
+  end
+
+  if choice == 7
     puts "What would you like to do?"
     40.times {print "-"}
     puts "\n"
@@ -294,7 +319,7 @@ while choice != 0
 
   end
 
-  if choice == 7
+  if choice == 8
     puts "What would you like to do?"
     40.times {print "-"}
     puts "\n"
@@ -395,7 +420,7 @@ while choice != 0
 
   end
 
-  if choice == 8
+  if choice == 9
     puts "Which product would you like to delete?"
     Shoe.all.each do |shoe_hash|
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
@@ -404,7 +429,9 @@ while choice != 0
     shoe_choice = gets.to_i
     shoe_to_delete = Shoe.new(shoe_choice)
 
-    puts shoe_to_delete.information
+    shoe_to_delete.information.each do |shoe_hash|
+      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    end
 
     puts "Are you sure you wish to delete this product? (yes/no)"
     print ">> "
@@ -422,14 +449,15 @@ while choice != 0
   60.times {print "-"}
   puts "\n"
   puts "1".ljust(10) + "View current stock".rjust(30)
-  puts "2".ljust(10) + "Add new product".rjust(30)
-  puts "3".ljust(10) + "View stock quantities".rjust(30)
-  puts "4".ljust(10) + "Update stock quantity".rjust(30)
+  puts "2".ljust(10) + "View stock quantities".rjust(30)
+  puts "3".ljust(10) + "Update stock quantity".rjust(30)
+  puts "4".ljust(10) + "Add new product".rjust(30)
   puts "5".ljust(10) + "Update product information".rjust(30)
-  puts "6".ljust(10) + "View location information".rjust(30)
-  puts "7".ljust(10) + "View category information".rjust(30)
-  puts "8".ljust(10) + "Delete product".rjust(30)
-  puts "0".ljust(10) + "Exit Cutsie Bootsie Inventory".rjust(30)
+  puts "6".ljust(10) + "View products by cost".rjust(30)
+  puts "7".ljust(10) + "View location information".rjust(30)
+  puts "8".ljust(10) + "View category information".rjust(30)
+  puts "9".ljust(10) + "Delete product".rjust(30)
+  puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
   print ">> "
   choice = gets.to_i
 

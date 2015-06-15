@@ -46,6 +46,21 @@ class Shoe
     DATABASE.execute("SELECT SUM(location_stock) FROM shoes;")
   end
 
+  # Shows all products by cost categories
+  #
+  # cost_category - String, should be categories of high, medium, or low
+  #
+  # Returns products within the given range
+  def self.where_cost(cost_category)
+    if cost_category == "high"
+      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100")
+    elsif cost_category == "medium"
+      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 50 AND cost < 100")
+    else
+      DATABASE.execute("SELECT * FROM shoes WHERE cost < 50")
+    end
+  end
+
   # Update any value for a given field that takes Strings
   #
   # field_name - String
