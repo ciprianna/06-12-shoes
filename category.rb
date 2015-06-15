@@ -27,7 +27,7 @@ class Category
   #
   # Returns all shoes (rows) at that category from the shoes table
   def shoes
-    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
+    DATABASE.execute("SELECT * FROM shoes WHERE category_id = #{@id};")
   end
 
   # Update method for the categories table

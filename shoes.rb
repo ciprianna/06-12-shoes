@@ -108,8 +108,8 @@ class Shoe
   #
   # Returns nothing
   def update_quantity(to_add)
-    #current_quantity = DATABASE.execute("SELECT location_stock WHERE id = #{@id};")
-    DATABASE.execute("UPDATE shoes SET location_stock = location_stock + #{to_add};")
+    current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first['location_stock']
+    DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity + to_add} WHERE id = #{@id};")
   end
 
   # Assigns/updates the category_id of a shoe instance

@@ -31,40 +31,50 @@ puts "7".ljust(10) + "View category information".rjust(30)
 puts "8".ljust(10) + "Delete product".rjust(30)
 puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
 
+print ">> "
 choice = gets.to_i
 
 range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
 while range.include?(choice) == false
   puts "Please choose a number from the menu"
+  print ">> "
   choice = gets.to_i
 end
 
 while choice != 0
 
   if choice == 1
-    puts Shoe.all
+    Shoe.all.each do |shoe_hash|
+    puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    end
   end
 
   if choice == 2
     puts "Okay, please enter the product information."
     puts "Shoe name:"
+    print ">> "
     name = gets.chomp
     puts "Cost:"
+    print ">> "
     cost = gets.to_f
     puts "Color:"
+    print ">> "
     color = gets.chomp
     puts "Category:"
     Category.all.each do |category_hash|
       puts "#{category_hash['id']} - #{category_hash['name']}"
     end
+    print ">> "
     category_id = gets.to_i
     puts "Storage location:"
     Location.all.each do |location_hash|
       puts "#{location_hash['id']} - #{location_hash['name']}"
     end
+    print ">> "
     location_id = gets.to_i
     puts "Quantity:"
+    print ">> "
     quantity = gets.to_i
     Shoe.add(name, cost, color, category_id, location_id, quantity)
   end
@@ -82,12 +92,13 @@ while choice != 0
     Shoe.all.each do |shoe_hash|
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
     end
-
+    print ">> "
     shoe_to_change = gets.to_i
 
     shoe = Shoe.new(shoe_to_change)
 
     puts "Okay, and how many are you adding? If removing quantity, enter a negative number."
+    print ">> "
     change = gets.to_i
 
     shoe.update_quantity(change)
@@ -99,6 +110,7 @@ while choice != 0
     Shoe.all.each do |shoe_hash|
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
     end
+    print ">> "
     shoe = gets.to_i
     shoe_to_change = Shoe.new(shoe)
 
@@ -111,30 +123,35 @@ while choice != 0
     puts "4".ljust(10) + "Category".rjust(30)
     puts "5".ljust(10) + "Location".rjust(30)
     puts "0".ljust(10) + "Exit product update".rjust(30)
+    print ">> "
     to_update = gets.to_i
 
     range_for_updates = [0, 1, 2, 3, 4, 5]
     while range_for_updates.include?(to_update) == false
       puts "Please choose a number from the menu"
+      print ">> "
       to_update = gets.to_i
     end
 
     while to_update != 0
 
       if to_update == 1
-        "What is the new name for this shoe?"
-        new_name(gets.chomp)
+        puts "What is the new name for this shoe?"
+        print ">> "
+        new_name = gets.chomp
         shoe_to_change.update_name(new_name)
       end
 
       if to_update == 2
-        "What is the new cost for this shoe?"
+        puts "What is the new cost for this shoe?"
+        print ">> "
         new_cost = gets.to_f
         shoe_to_change.update_cost(new_cost)
       end
 
       if to_update == 3
-        "What is the new color of the shoe?"
+        puts "What is the new color of the shoe?"
+        print ">> "
         new_color = gets.chomp
         shoe_to_change.update_color(new_color)
       end
@@ -144,6 +161,7 @@ while choice != 0
         Category.all.each do |category_hash|
           puts "#{category_hash['id']} - #{category_hash['name']}"
         end
+        print ">> "
         new_category_id = gets.to_i
         shoe_to_change.update_category(new_category_id)
       end
@@ -153,17 +171,21 @@ while choice != 0
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
+        print ">> "
         new_location_id = gets.to_i
         shoe_to_change.update_location(new_location_id)
       end
 
       puts "Is there anything else to update for this product?"
+      40.times {print "-"}
+      puts "\n"
       puts "1".ljust(10) + "Name".rjust(30)
       puts "2".ljust(10) + "Cost".rjust(30)
       puts "3".ljust(10) + "Color".rjust(30)
       puts "4".ljust(10) + "Category".rjust(30)
       puts "5".ljust(10) + "Location".rjust(30)
       puts "0".ljust(10) + "Exit product update".rjust(30)
+      print ">> "
       to_update = gets.to_i
 
     end
@@ -180,11 +202,13 @@ while choice != 0
     puts "4".ljust(10) + "Add new location".rjust(30)
     puts "5".ljust(10) + "Delete location".rjust(30)
     puts "0".ljust(10) + "Exit location information".rjust(30)
+    print ">> "
     location_choice = gets.to_i
 
     range_for_locations = [0, 1, 2, 3, 4, 5]
     while range_for_locations.include?(location_choice) == false
       puts "Please choose a number from the menu"
+      print ">> "
       location_choice = gets.to_i
     end
 
@@ -202,6 +226,7 @@ while choice != 0
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
+        print ">> "
         location = gets.to_i
         location_to_view = Location.new(location)
         location_to_view.shoes.each do |shoes_hash|
@@ -214,10 +239,12 @@ while choice != 0
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
+        print ">> "
         location = gets.to_i
         location_to_change = Location.new(location)
 
         puts "What is the new name of this location?"
+        print ">> "
         new_location_name = gets.chomp
 
         location_to_change.update(new_location_name)
@@ -225,6 +252,7 @@ while choice != 0
 
       if location_choice == 4
         puts "What's the name of the new location?"
+        print ">> "
         new_location = gets.chomp
         Location.add(new_location)
       end
@@ -234,6 +262,7 @@ while choice != 0
         Location.all.each do |location_hash|
           puts "#{location_hash['id']} - #{location_hash['name']}"
         end
+        print ">> "
         location = gets.to_i
         location_to_delete = Location.new(location)
 
@@ -258,7 +287,7 @@ while choice != 0
       puts "4".ljust(10) + "Add new location".rjust(30)
       puts "5".ljust(10) + "Delete location".rjust(30)
       puts "0".ljust(10) + "Exit location information".rjust(30)
-
+      print ">> "
       location_choice = gets.to_i
 
     end
@@ -275,11 +304,13 @@ while choice != 0
     puts "4".ljust(10) + "Add new category".rjust(30)
     puts "5".ljust(10) + "Delete category".rjust(30)
     puts "0".ljust(10) + "Exit category information".rjust(30)
+    print ">> "
     category_choice = gets.to_i
 
     range_for_categories = [0, 1, 2, 3, 4, 5]
     while range_for_categories.include?(category_choice) == false
       puts "Please choose a number from the menu"
+      print ">> "
       category_choice = gets.to_i
     end
 
@@ -297,6 +328,7 @@ while choice != 0
         Category.all.each do |category_hash|
           puts "#{category_hash['id']} - #{category_hash['name']}"
         end
+        print ">> "
         category = gets.to_i
         category_to_view = Category.new(category)
         category_to_view.shoes.each do |shoes_hash|
@@ -309,10 +341,12 @@ while choice != 0
         Category.all.each do |category_hash|
           puts "#{category_hash['id']} - #{category_hash['name']}"
         end
+        print ">> "
         category = gets.to_i
         category_to_change = Category.new(category)
 
         puts "What is the new name of this category?"
+        print ">> "
         new_category_name = gets.chomp
 
         category_to_change.update(new_category_name)
@@ -320,6 +354,7 @@ while choice != 0
 
       if category_choice == 4
         puts "What's the name of the new category?"
+        print ">> "
         new_category = gets.chomp
         Category.add(new_category)
       end
@@ -329,6 +364,7 @@ while choice != 0
         Category.all.each do |category_hash|
           puts "#{category_hash['id']} - #{category_hash['name']}"
         end
+        print ">> "
         category = gets.to_i
         category_to_delete = Category.new(category)
 
@@ -352,6 +388,7 @@ while choice != 0
       puts "4".ljust(10) + "Add new category".rjust(30)
       puts "5".ljust(10) + "Delete category".rjust(30)
       puts "0".ljust(10) + "Exit category information".rjust(30)
+      print ">> "
       category_choice = gets.to_i
 
     end
@@ -363,12 +400,14 @@ while choice != 0
     Shoe.all.each do |shoe_hash|
       puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
     end
+    print ">> "
     shoe_choice = gets.to_i
     shoe_to_delete = Shoe.new(shoe_choice)
 
     puts shoe_to_delete.information
 
     puts "Are you sure you wish to delete this product? (yes/no)"
+    print ">> "
     sure = gets.chomp.downcase
 
     if sure == "yes"
@@ -377,6 +416,8 @@ while choice != 0
 
   end
 
+  60.times {print "-"}
+  puts "\n"
   puts "What would you like to do with the Cutsie Bootsie Inventory?"
   60.times {print "-"}
   puts "\n"
@@ -389,10 +430,12 @@ while choice != 0
   puts "7".ljust(10) + "View category information".rjust(30)
   puts "8".ljust(10) + "Delete product".rjust(30)
   puts "0".ljust(10) + "Exit Cutsie Bootsie Inventory".rjust(30)
+  print ">> "
   choice = gets.to_i
 
   while range.include?(choice) == false
     puts "Please choose a number from the menu"
+    print ">> "
     choice = gets.chomp
   end
 

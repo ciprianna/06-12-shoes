@@ -27,7 +27,7 @@ class Location
   #
   # Returns all shoes (rows) at that location from the shoes table
   def shoes
-    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
+    DATABASE.execute("SELECT * FROM shoes WHERE location_id = #{@id};")
   end
 
   # Update method for the locations table
