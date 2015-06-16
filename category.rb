@@ -73,8 +73,6 @@ class Category
 
   # Update method for the categories table
   #
-  # new_category_name - String
-  #
   # Returns a Category Object for the newly changed row
   def save
     results = DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};").first

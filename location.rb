@@ -4,45 +4,64 @@ class Location
 
   # Assigns an id for identification in instance methods
   #
-  # id - Integer assigned as the primary key from the id column
+  # id - Integer assigned as the primary key
+  # name - String
   #
-  # Returns location object created
-  def initialize(id)
+  # Returns newly created Location Object
+  def initialize(id = nil, name = nil)
     @id = id
+    @name = name
   end
 
   # Creates a new location (row) in the locations table
   #
   # location_name - String
   #
-  # Returns an empty Array
+  # Returns the newly created Location Object
   def self.add(location_name)
-    DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');")
+    results = DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');").first
+
+    temp_id = DATABASE.last_insert_row_id
+
+    Location.new(temp_id, results['location_name'])
   end
 
   # Read method for the locations table
   #
-  # Returns all information from the locations table as an Array of Hashes. Each
-  #   Hash corresponds to one row of data (one location).
+  # Returns all information from the locations table as an Array of Location
+  #   Objects.
   def self.all
-    DATABASE.execute("SELECT * FROM locations;")
+    results = DATABASE.execute("SELECT * FROM locations;")
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Location.new(hash['id'], hash['name'])
+    end
   end
 
   # Reads all shoes at a location object
   #
   # Returns all shoe information at one location from the shoes table as an
-  #  Array of Hashes. Each Hash corresponds to a row of data which is stored at #  the passed id.
+  #   Array of Objects. Each Object corresponds to a row of data which is stored
+  #   at the passed id.
   def shoes
-    DATABASE.execute("SELECT * FROM shoes WHERE location_id = #{@id};")
+    results = DATABASE.execute("SELECT * FROM shoes WHERE location_id = #{@id};")
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Location.new(hash['id'], hash['name'])
+    end
   end
 
   # Update method for the locations table
   #
-  # new_location_name - String
-  #
-  # Returns an empty Array
-  def update(new_location_name)
-    DATABASE.execute("UPDATE locations SET name = '#{new_location_name}' WHERE id = #{@id};")
+  # Returns the newly updated row as a Location Object
+  def save
+    result = DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};").first
+
+    Location.new(result['id'], result['name'])
   end
 
   # Checks to see if the location contains no products.
@@ -54,10 +73,16 @@ class Location
 
   # Delete a category from the categories table
   #
-  # Returns an empty Array
+  # Returns the remaining rows as an Array of Location Objects
   def delete
     if self.empty?
-      DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
+      results = DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
+
+      store_results = []
+
+      results.each do |hash|
+        store_results << Location.new(hash['id'], hash['name'])
+      end
     end
   end
 
