@@ -8,9 +8,9 @@ class Shoe
   # Assigns an id for identification in instance methods
   #
   # id - Integer assigned as the primary key from the id column
-  # name - String
-  # cost - Integer
-  # color - String
+  # name - String that is the shoe's name
+  # cost - Integer that represents the cost of the shoe
+  # color - String for the color of the shoe
   # category_id - Integer, foreign key from the categories table
   # location_id - Integer, foreign key from the locations table
   # location_stock - Integer indicating quantity of product
@@ -135,33 +135,28 @@ class Shoe
   #
   # Returns newly updated Shoe object
   def save
-    saved_data = DATABASE.execute("UPDATE shoes SET name = #{self.name}, cost = #{self.cost}, color = #{self.color}, category_id = #{self.category_id}, location_id = #{self.location_id}, location_stock = #{self.location_stock};")
+    if
+      DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
 
-    store_results = []
+      return true
 
-    saved_date.each do |shoe|
-      store_results << Shoe.new(saved_data['id'], saved_data['name'], saved_data['cost'], saved_data['color'], saved_data['category_id'], saved_data['location_id'], saved_data['location_stock'])
+    else
+      return false
     end
-
-    return store_results
+    # Shoe.new(saved_data['id'], saved_data['name'], saved_data['cost'], saved_data['color'], saved_data['category_id'], saved_data['location_id'], saved_data['location_stock'])
   end
 
   # Updates the quantity of a product for a given id
   #
   # to_add - Integer
   #
-  # Returns the newly updated Shoe object.
+  # Returns the location_stock attribute - Integer.
   def update_quantity(to_add)
     current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first
-    results = DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity['location_stock'] + to_add} WHERE id = #{@id};")
+    DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity['location_stock'] + to_add} WHERE id = #{@id};").first
 
-    store_results = []
 
-    results.each do |shoe|
-      store_results << Shoe.new(results['id'], results['name'], results['cost'], results['color'], results['category_id'], results['location_id'], results['location_stock'])
-    end
-
-    return store_results
+    @location_stock = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first[0]
   end
 
   # Deletes a shoe row from the shoes table
@@ -169,15 +164,12 @@ class Shoe
   # Returns an Array containing the remaining rows in the shoes table as Shoe
   #   objects.
   def delete
-    results = DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
-
-    store_results = []
-
-    results.each do |hash|
-      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    if
+      DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
+      return true
+    else
+      return false
     end
-
-    return store_results
   end
 
 end

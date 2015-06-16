@@ -115,7 +115,11 @@ while choice != 0
         change = gets.to_i
 
         shoe.update_quantity(change)
-        shoe.save
+        if shoe.save
+          puts "Quantity updated"
+        else
+          puts "Quantity update failed."
+        end
       end
 
       ##### Re-asks for the menu options----------------------------------------
@@ -444,9 +448,7 @@ while choice != 0
 
         location_to_delete = Location.find(location)
 
-        location_to_delete.delete
-
-        if location_to_delete.empty?
+        if location_to_delete.delete
           puts "Location deleted"
         else
           puts "Cannot delete this location while shoes are stored here."
@@ -586,9 +588,7 @@ while choice != 0
 
         category_to_delete = Category.find(category)
 
-        category_to_delete.delete
-
-        if category_to_delete.empty?
+        if category_to_delete.delete
           puts "Category deleted"
         else
           puts "Cannot delete this category while shoes are assigned."
@@ -645,7 +645,11 @@ while choice != 0
     sure = gets.chomp.downcase
 
     if sure == "yes"
-      shoe_to_delete.delete
+      if shoe_to_delete.delete
+        puts "Shoe successfully deleted."
+      else
+        puts "Deletion failed."
+      end
     end
 
   end

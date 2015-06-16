@@ -79,20 +79,15 @@ class Location
     self.shoes == []
   end
 
-  # Delete a category from the categories table
+  # Delete a category row from the categories table
   #
-  # Returns the remaining rows as an Array of Location Objects
+  # Returns true/false Boolean
   def delete
     if self.empty?
-      results = DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
-
-      store_results = []
-
-      results.each do |hash|
-        store_results << Location.new(hash['id'], hash['name'])
-      end
-
-      return store_results
+      DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
+      return true
+    else
+      return false
     end
   end
 

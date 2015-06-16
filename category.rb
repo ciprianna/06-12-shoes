@@ -102,15 +102,10 @@ class Category
   # Returns an Array containing the remaining rows as Category Objects
   def delete
     if self.empty?
-      results = DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
-
-      store_results = []
-
-      results.each do |hash|
-        store_results << Category.new(hash['id'], hash['name'])
-      end
-
-      return store_results
+      DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
+      return true
+    else
+      return false
     end
   end
 
