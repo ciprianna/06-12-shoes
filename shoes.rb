@@ -7,13 +7,13 @@ class Shoe
 
   # Assigns an id for identification in instance methods
   #
-  # id - Integer assigned as the primary key from the id column
-  # name - String that is the shoe's name
-  # cost - Integer that represents the cost of the shoe
-  # color - String for the color of the shoe
-  # category_id - Integer, foreign key from the categories table
-  # location_id - Integer, foreign key from the locations table
-  # location_stock - Integer indicating quantity of product
+  # id (optional) - Integer assigned as the primary key from the id column
+  # name (optional) - String that is the shoe's name
+  # cost (optional) - Integer that represents the cost of the shoe
+  # color (optional) - String for the color of the shoe
+  # category_id (optional) - Integer, foreign key from the categories table
+  # location_id (optional) - Integer, foreign key from the locations table
+  # location_stock (optional) - Integer indicating quantity of product
   #
   # Returns Shoe object created
   def initialize(id = nil, name = nil, cost = nil, color = nil, category_id = nil, location_id = nil, location_stock = nil)
@@ -40,22 +40,35 @@ class Shoe
 
   # Creates a new shoe (row) in the shoes table
   #
-  # shoe_name - String
-  # cost - Integer
-  # color - String
+  # shoe_name - String for the shoe's name
+  # cost - Integer for the shoe's cost
+  # color - String for the shoe's color
   # category_id - Integer, foreign key from the categories table
   # location_id - Integer, foreign key from the locations table
   # quantity - Integer, to be added to the location_stock column
   #
   # Returns the new Shoe Object created.
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
+    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', #{category_id}, #{location_id}, #{quantity});")
 
     temp_id = DATABASE.last_insert_row_id
 
     Shoe.new(temp_id, shoe_name, cost, color, category_id, location_id, quantity)
 
     return self
+  end
+
+  # Adds a Shoe Object to the database.
+  #
+  # Returns id of the object if added - Integer, else returns False.
+  def add_to_database
+    if valid?
+      DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{@name}', #{@cost}, '#{@color}', #{@category_id}, #{@location_id}, #{@location_stock});")
+
+      @id = DATABASE.last_insert_row_id
+    else
+      false
+    end
   end
 
   # Read method for the shoes table
@@ -148,11 +161,10 @@ class Shoe
   #
   # Returns the location_stock attribute - Integer.
   def update_quantity(to_add)
-    current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first
-    DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity['location_stock'] + to_add} WHERE id = #{@id};").first
+    DATABASE.execute("UPDATE shoes SET location_stock = #{@location_stock + to_add} WHERE id = #{@id};").first
 
+    @location_stock += to_add
 
-    @location_stock = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first[0]
   end
 
   # Deletes a shoe row from the shoes table

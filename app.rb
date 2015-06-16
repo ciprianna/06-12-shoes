@@ -1,9 +1,10 @@
 # Driver
-
 require "sqlite3"
 require_relative "shoes.rb"
 require_relative "location.rb"
 require_relative "category.rb"
+require_relative "menu_module.rb"
+require_relative "validity_module.rb"
 
 # Creates the database connection
 DATABASE = SQLite3::Database.new("shoe_inventory.db")
@@ -19,30 +20,7 @@ DATABASE.results_as_hash = true
 ################################################################################
 
 # Main menu in ux to get an initial choice from the user
-puts "What would you like to do with the Cutesie Bootsie Inventory?"
-60.times {print "-"}
-puts "\n"
-puts "1".ljust(10) + "View current stock".rjust(30)
-puts "2".ljust(10) + "View quantity information".rjust(30)
-puts "3".ljust(10) + "Add new product".rjust(30)
-puts "4".ljust(10) + "Update product information".rjust(30)
-puts "5".ljust(10) + "View products by cost".rjust(30)
-puts "6".ljust(10) + "View location information".rjust(30)
-puts "7".ljust(10) + "View category information".rjust(30)
-puts "8".ljust(10) + "Delete product".rjust(30)
-puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
-
-print ">> "
-choice = gets.to_i
-
-# Loop to get a valid response from the user
-range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-
-while !range.include?(choice)
-  puts "Please choose a number from the menu"
-  print ">> "
-  choice = gets.to_i
-end
+choice = main_menu
 
 # Begins the loop when a correct input from the user has been entered.
 #   If zero, it skips the loop entirely and exits the program.
@@ -56,22 +34,7 @@ while choice != 0
   end
 ##### Quantity information menu; gives a list of sub-options--------------------
   if choice == 2
-    puts "What would you like to do?"
-    40.times {print "-"}
-    puts "\n"
-    puts "1".ljust(10) + "View all stock quantities".rjust(30)
-    puts "2".ljust(10) + "View low quantities".rjust(30)
-    puts "3".ljust(10) + "Update stock quantities".rjust(30)
-    puts "0".ljust(10) + "Exit quantity information".rjust(30)
-    print ">> "
-    quantity_choice = gets.to_i
-
-    quantity_choice_range = [0, 1, 2, 3]
-    while !quantity_choice_range.include?(quantity_choice)
-      puts "Please choose a number from the menu"
-      print ">> "
-      quantity_choice = gets.to_i
-    end
+    quantity_choice = quantity_menu
 
     while quantity_choice != 0
 
@@ -94,19 +57,11 @@ while choice != 0
       ##### Updates an item's quantity------------------------------------------
       if quantity_choice == 3
         puts "Which product quantity would you like to update?"
-        quantity_range = []
-        Shoe.all.each do |shoe_object|
-          puts "#{shoe_object.id} - #{shoe_object.name}"
-          quantity_range << shoe_object.id
-        end
+        quantity_range = list_all_store_range(Shoe)
         print ">> "
         shoe_to_change = gets.to_i
 
-        while !quantity_range.include?(shoe_to_change)
-          puts "Please choose an id from the options:"
-          print ">> "
-          shoe_to_change = gets.to_i
-        end
+        shoe_to_change = valid_response_entered(quantity_range, shoe_to_change)
 
         shoe = Shoe.find(shoe_to_change)
 
@@ -123,17 +78,7 @@ while choice != 0
       end
 
       ##### Re-asks for the menu options----------------------------------------
-      40.times {print "-"}
-      puts "\n"
-      puts "What would you like to do?"
-      40.times {print "-"}
-      puts "\n"
-      puts "1".ljust(10) + "View all stock quantities".rjust(30)
-      puts "2".ljust(10) + "View low quantities".rjust(30)
-      puts "3".ljust(10) + "Update stock quantities".rjust(30)
-      puts "0".ljust(10) + "Exit quantity information".rjust(30)
-      print ">> "
-      quantity_choice = gets.to_i
+      quantity_choice = quantity_menu
 
     end
   end
@@ -662,29 +607,7 @@ while choice != 0
   end
 
 ##### Re-asks the user for an option--------------------------------------------
-  60.times {print "-"}
-  puts "\n"
-  puts "What would you like to do with the Cutesie Bootsie Inventory?"
-  60.times {print "-"}
-  puts "\n"
-  puts "1".ljust(10) + "View current stock".rjust(30)
-  puts "2".ljust(10) + "View quantity information".rjust(30)
-  puts "3".ljust(10) + "Add new product".rjust(30)
-  puts "4".ljust(10) + "Update product information".rjust(30)
-  puts "5".ljust(10) + "View products by cost".rjust(30)
-  puts "6".ljust(10) + "View location information".rjust(30)
-  puts "7".ljust(10) + "View category information".rjust(30)
-  puts "8".ljust(10) + "Delete product".rjust(30)
-  puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
-  print ">> "
-  choice = gets.to_i
-
-  range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
-  while !range.include?(choice)
-    puts "Please choose a number from the menu"
-    print ">> "
-    choice = gets.chomp
-  end
+  choice = main_menu
 
 end
 

@@ -101,7 +101,6 @@ class Location
   def delete
     if self.shoes.empty?
       DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
-      return true
     else
       return false
     end

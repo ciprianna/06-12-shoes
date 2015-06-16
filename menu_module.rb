@@ -1,0 +1,80 @@
+# Module for Menu Items
+
+
+# Main menu in ux to get an initial choice from the user
+#
+# Returns choice - Integer
+def main_menu
+  60.times {print "-"}
+  puts "\n"
+  puts "What would you like to do with the Cutesie Bootsie Inventory?"
+  60.times {print "-"}
+  puts "\n"
+  puts "1".ljust(10) + "View current stock".rjust(30)
+  puts "2".ljust(10) + "View quantity information".rjust(30)
+  puts "3".ljust(10) + "Add new product".rjust(30)
+  puts "4".ljust(10) + "Update product information".rjust(30)
+  puts "5".ljust(10) + "View products by cost".rjust(30)
+  puts "6".ljust(10) + "View location information".rjust(30)
+  puts "7".ljust(10) + "View category information".rjust(30)
+  puts "8".ljust(10) + "Delete product".rjust(30)
+  puts "0".ljust(10) + "Exit Cutesie Bootsie Inventory".rjust(30)
+
+  print ">> "
+  choice = gets.to_i
+
+  range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
+
+  valid_response_entered(range, choice)
+
+  return choice
+
+end
+
+# Sub-Menu for tasks related to product quantity
+#
+# Returns quantity_choice - Integer
+def quantity_menu
+  40.times {print "-"}
+  puts "\n"
+  puts "What would you like to do?"
+  40.times {print "-"}
+  puts "\n"
+  puts "1".ljust(10) + "View all stock quantities".rjust(30)
+  puts "2".ljust(10) + "View low quantities".rjust(30)
+  puts "3".ljust(10) + "Update stock quantities".rjust(30)
+  puts "0".ljust(10) + "Exit quantity information".rjust(30)
+  print ">> "
+  quantity_choice = gets.to_i
+
+  quantity_choice_range = [0, 1, 2, 3]
+
+  valid_response_entered(quantity_choice_range, quantity_choice)
+
+  return quantity_choice
+end
+
+# Lists all Objects in a Class like a menu
+#
+# class_to_list - Class to use the .all method on
+#
+# Returns a String containing Object information
+def list_all(class_to_list)
+  class_to_list.all.each do |object|
+    puts "#{object.id} - #{object.name}"
+  end
+end
+
+# Lists all Objects in a Class like a menu and stores the ids in an Array.
+#
+# class_to_list - Class to use the .all method on
+#
+# Returns the Array of id's - Integers
+def list_all_store_range(class_to_list)
+  range = []
+  class_to_list.all.each do |object|
+    puts "#{object.id} - #{object.name}"
+    range << object.id
+  end
+  return range
+end

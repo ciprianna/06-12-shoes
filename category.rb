@@ -100,7 +100,6 @@ class Category
   def delete
     if self.shoes.empty?
       DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
-      return true
     else
       return false
     end
