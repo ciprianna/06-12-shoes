@@ -73,7 +73,9 @@ class Shoe
   #
   # Returns the sum of all location_stock values - Integer
   def self.total_stock
-    DATABASE.execute("SELECT SUM(location_stock) FROM shoes;")
+    sum = DATABASE.execute("SELECT SUM(location_stock) FROM shoes;").first
+
+    sum = sum[0]
   end
 
   # Shows all products by cost categories

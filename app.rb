@@ -50,8 +50,8 @@ while choice != 0
 
 ##### Displays all products-----------------------------------------------------
   if choice == 1
-    Shoe.all.each do |shoe_hash|
-    puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    Shoe.all.each do |shoe_object|
+    puts "ID: #{shoe_object.id}, Name: #{shoe_object.name}, Cost: #{shoe_object.cost}, Color: #{shoe_object.color}, Category: #{shoe_object.category_id}, Location: #{shoe_object.location_id}, Quantity: #{shoe_object.location_stock}"
     end
   end
 ##### Quantity information menu; gives a list of sub-options--------------------
@@ -77,18 +77,17 @@ while choice != 0
 
       ##### Views all stock quantities------------------------------------------
       if quantity_choice == 1
-        Shoe.quantity.each do |shoe_hash|
-          puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
+        Shoe.all.each do |shoe_object|
+          puts "#{shoe_object.id} - #{shoe_object.name} (#{shoe_object.location_stock})"
         end
 
-        total_stock = Shoe.total_stock
-        puts "Total stock quantity - #{total_stock[0][0]}"
+        puts "Total stock quantity - #{Shoe.total_stock}"
       end
 
       ##### Shows all items where_quantity_is_low-------------------------------
       if quantity_choice == 2
-        Shoe.where_quantity_is_low.each do |shoe_hash|
-          puts "#{shoe_hash['id']} - #{shoe_hash['name']} (#{shoe_hash['location_stock']})"
+        Shoe.where_quantity_is_low.each do |shoe_object|
+          puts "#{shoe_object.id} - #{shoe_object.name} (#{shoe_object.location_stock})"
         end
       end
 
@@ -96,9 +95,9 @@ while choice != 0
       if quantity_choice == 3
         puts "Which product quantity would you like to update?"
         quantity_range = []
-        Shoe.all.each do |shoe_hash|
-          puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
-          quantity_range.push(shoe_hash['id'])
+        Shoe.all.each do |shoe_object|
+          puts "#{shoe_object.id} - #{shoe_object.name}"
+          quantity_range << shoe_object.'id'
         end
         print ">> "
         shoe_to_change = gets.to_i
@@ -109,16 +108,19 @@ while choice != 0
           shoe_to_change = gets.to_i
         end
 
-        shoe = Shoe.new(shoe_to_change)
+        shoe = Shoe.find(shoe_to_change)
 
         puts "Okay, and how many are you adding? If removing quantity, enter a negative number."
         print ">> "
         change = gets.to_i
 
         shoe.update_quantity(change)
+        shoe.save
       end
 
       ##### Re-asks for the menu options----------------------------------------
+      40.times {print "-"}
+      puts "\n"
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -146,9 +148,9 @@ while choice != 0
     color = gets.chomp
     puts "Category:"
     category_range = []
-    Category.all.each do |category_hash|
-      puts "#{category_hash['id']} - #{category_hash['name']}"
-      category_range.push(category_hash['id'])
+    Category.all.each do |category|
+      puts "#{category.id} - #{category.id}"
+      category_range << category.id
     end
     print ">> "
     category_id = gets.to_i
@@ -161,9 +163,9 @@ while choice != 0
 
     puts "Storage location:"
     location_range = []
-    Location.all.each do |location_hash|
-      puts "#{location_hash['id']} - #{location_hash['name']}"
-      location_range.push(location_hash['id'])
+    Location.all.each do |location|
+      puts "#{location.id} - #{location.name}"
+      location_range << location.id
     end
     print ">> "
     location_id = gets.to_i
@@ -178,15 +180,17 @@ while choice != 0
     print ">> "
     quantity = gets.to_i
     Shoe.add(name, cost, color, category_id, location_id, quantity)
+
+    puts "Product added to inventory."
   end
 
 ##### Updates a product's information-------------------------------------------
   if choice == 4
     puts "Which product would you like to update?"
     shoe_range = []
-    Shoe.all.each do |shoe_hash|
-      puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
-      shoe_range.push(shoe_hash['id'])
+    Shoe.all.each do |shoe|
+      puts "#{shoe.id} - #{shoe.name}"
+      shoe_range << shoe.id
     end
     print ">> "
     shoe = gets.to_i
@@ -197,11 +201,11 @@ while choice != 0
       shoe = gets.to_i
     end
 
-    shoe_to_change = Shoe.new(shoe)
+    shoe_to_change = Shoe.find(shoe)
 
     ##### Displays all information pertaining to the selected shoe--------------
-    shoe_to_change.information.each do |shoe_hash|
-      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    shoe_to_change.find.each do |shoe|
+      puts "ID: #{shoe.id}, Name: #{shoe.name}, Cost: #{shoe.cost}, Color: #{shoe.color}, Category: #{shoe.category_id}, Location: #{shoe.location_id}, Quantity: #{shoe.location_stock}"
     end
 
     ##### Sub-menu for updating-------------------------------------------------
@@ -232,7 +236,7 @@ while choice != 0
         puts "What is the new name for this shoe?"
         print ">> "
         new_name = gets.chomp
-        shoe_to_change.update_name(new_name)
+        shoe_to_change.name = new_name
       end
 
       ##### Updates the cost of the shoe----------------------------------------
@@ -240,7 +244,7 @@ while choice != 0
         puts "What is the new cost for this shoe?"
         print ">> "
         new_cost = gets.to_f
-        shoe_to_change.update_cost(new_cost)
+        shoe_to_change.cost = new_cost
       end
 
       ##### Updates the color of the shoe---------------------------------------
@@ -248,16 +252,16 @@ while choice != 0
         puts "What is the new color of the shoe?"
         print ">> "
         new_color = gets.chomp
-        shoe_to_change.update_color(new_color)
+        shoe_to_change.color = new_color
       end
 
       ##### Updates the category_id of the shoe---------------------------------
       if to_update == 4
         puts "What is the new category of the shoe?"
         category_range = []
-        Category.all.each do |category_hash|
-          puts "#{category_hash['id']} - #{category_hash['name']}"
-          category_range.push(category_hash['id'])
+        Category.all.each do |category|
+          puts "#{category.id} - #{category.name}"
+          category_range << category.id
         end
         print ">> "
         new_category_id = gets.to_i
@@ -265,19 +269,19 @@ while choice != 0
         while !category_range.include?(new_category_id)
           puts "Please choose a category id from the options:"
           print ">> "
-          category_id = gets.to_i
+          new_category_id = gets.to_i
         end
 
-        shoe_to_change.update_category(new_category_id)
+        shoe_to_change.category_id = new_category_id
       end
 
       ##### Updates the location_id of the shoe---------------------------------
       if to_update == 5
         puts "What location is this shoe moving to?"
         location_range = []
-        Location.all.each do |location_hash|
-          puts "#{location_hash['id']} - #{location_hash['name']}"
-          location_range.push(location_hash['id'])
+        Location.all.each do |location|
+          puts "#{location.id} - #{location.name}"
+          location_range << location.id
         end
         print ">> "
         new_location_id = gets.to_i
@@ -288,7 +292,7 @@ while choice != 0
           new_location_id = gets.to_i
         end
 
-        shoe_to_change.update_location(new_location_id)
+        shoe_to_change.location_id = new_location_id
       end
 
       ##### Re-asks what option the user would like to choose-------------------
@@ -305,6 +309,8 @@ while choice != 0
       to_update = gets.to_i
 
     end
+
+    shoe_to_change.save
 
   end
 
@@ -324,8 +330,8 @@ while choice != 0
     end
 
     shoes_by_price = Shoe.where_cost(pricing_category)
-    shoes_by_price.each do |shoe_hash|
-      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    shoes_by_price.each do |shoe|
+      puts "ID: #{shoe.id}, Name: #{shoe.name}, Cost: #{shoe.cost}, Color: #{shoe.color}, Category: #{shoe.category_id}, Location: #{shoe.location_id}, Quantity: #{shoe.location_stock}"
     end
   end
 
@@ -356,8 +362,8 @@ while choice != 0
       ##### Displays all locations----------------------------------------------
       if location_choice == 1
         puts "Locations:"
-        Location.all.each do |location_hash|
-          puts "#{location_hash['id']} - #{location_hash['name']}"
+        Location.all.each do |location|
+          puts "#{location.id} - #{location.name}"
         end
       end
 
@@ -365,9 +371,9 @@ while choice != 0
       if location_choice == 2
         puts "Which location would you like to view products at?"
         location_range = []
-        Location.all.each do |location_hash|
-          puts "#{location_hash['id']} - #{location_hash['name']}"
-          location_range.push(location_hash['id'])
+        Location.all.each do |location|
+          puts "#{location.id} - #{location.name}"
+          location_range << location.id
         end
         print ">> "
         location = gets.to_i
@@ -378,9 +384,9 @@ while choice != 0
           location = gets.to_i
         end
 
-        location_to_view = Location.new(location)
-        location_to_view.shoes.each do |shoes_hash|
-          puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+        location_to_view = Location.find(location)
+        location_to_view.shoes.each do |shoes|
+          puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
         end
       end
 
@@ -388,9 +394,9 @@ while choice != 0
       if location_choice == 3
         puts "Which location would you like to change the name of?"
         location_range = []
-        Location.all.each do |location_hash|
-          puts "#{location_hash['id']} - #{location_hash['name']}"
-          location_range.push(location_hash['id'])
+        Location.all.each do |location|
+          puts "#{location.id} - #{location.name}"
+          location_range << location.id
         end
         print ">> "
         location = gets.to_i
@@ -401,13 +407,14 @@ while choice != 0
           location = gets.to_i
         end
 
-        location_to_change = Location.new(location)
+        location_to_change = Location.find(location)
 
         puts "What is the new name of this location?"
         print ">> "
         new_location_name = gets.chomp
 
-        location_to_change.update(new_location_name)
+        location_to_change.name = new_location_name
+        location_to_change.save
       end
 
       ##### Adds a new location-------------------------------------------------
@@ -422,9 +429,9 @@ while choice != 0
       if location_choice == 5
         puts "Which location would you like to delete?"
         location_range = []
-        Location.all.each do |location_hash|
-          puts "#{location_hash['id']} - #{location_hash['name']}"
-          location_range.push(location_hash['id'])
+        Location.all.each do |location|
+          puts "#{location.id} - #{location.name}"
+          location_range << location.id
         end
         print ">> "
         location = gets.to_i
@@ -435,7 +442,7 @@ while choice != 0
           location = gets.to_i
         end
 
-        location_to_delete = Location.new(location)
+        location_to_delete = Location.find(location)
 
         location_to_delete.delete
 
@@ -443,14 +450,16 @@ while choice != 0
           puts "Location deleted"
         else
           puts "Cannot delete this location while shoes are stored here."
-          location_to_delete.shoes.each do |shoes_hash|
-            puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+          location_to_delete.shoes.each do |shoes|
+            puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
           end
         end
 
       end
 
       ##### Re-asks the user to input an option---------------------------------
+      40.times {print "-"}
+      puts "\n"
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -494,8 +503,8 @@ while choice != 0
       ##### Displays all categories---------------------------------------------
       if category_choice == 1
         puts "Categories:"
-        Category.all.each do |categories_hash|
-          puts "#{categories_hash['id']} - #{categories_hash['name']}"
+        Category.all.each do |categories|
+          puts "#{categories.id} - #{categories.name}"
         end
       end
 
@@ -503,9 +512,9 @@ while choice != 0
       if category_choice == 2
         puts "Which category would you like to view products in?"
         category_range = []
-        Category.all.each do |category_hash|
-          puts "#{category_hash['id']} - #{category_hash['name']}"
-          category_range.push(category_hash['id'])
+        Category.all.each do |category|
+          puts "#{category.id} - #{category.name}"
+          category_range << category.id
         end
         print ">> "
         category = gets.to_i
@@ -516,9 +525,9 @@ while choice != 0
           category = gets.to_i
         end
 
-        category_to_view = Category.new(category)
-        category_to_view.shoes.each do |shoes_hash|
-          puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+        category_to_view = Category.find(category)
+        category_to_view.shoes.each do |shoes|
+          puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
         end
       end
 
@@ -526,9 +535,9 @@ while choice != 0
       if category_choice == 3
         puts "Which category would you like to change the name of?"
         category_range = []
-        Category.all.each do |category_hash|
-          puts "#{category_hash['id']} - #{category_hash['name']}"
-          category_range.push(category_hash['id'])
+        Category.all.each do |category|
+          puts "#{category.id} - #{category.name}"
+          category_range << category.id
         end
         print ">> "
         category = gets.to_i
@@ -539,13 +548,14 @@ while choice != 0
           category = gets.to_i
         end
 
-        category_to_change = Category.new(category)
+        category_to_change = Category.find(category)
 
         puts "What is the new name of this category?"
         print ">> "
         new_category_name = gets.chomp
 
-        category_to_change.update(new_category_name)
+        category_to_change.name = new_category_name
+        category_to_change.save
       end
 
       ##### Adds a new category-------------------------------------------------
@@ -561,9 +571,9 @@ while choice != 0
       if category_choice == 5
         puts "Which category would you like to delete?"
         category_range = []
-        Category.all.each do |category_hash|
-          puts "#{category_hash['id']} - #{category_hash['name']}"
-          category_range.push(category_hash['id'])
+        Category.all.each do |category|
+          puts "#{category.id} - #{category.name}"
+          category_range << category.id
         end
         print ">> "
         category = gets.to_i
@@ -574,7 +584,7 @@ while choice != 0
           category = gets.to_i
         end
 
-        category_to_delete = Category.new(category)
+        category_to_delete = Category.find(category)
 
         category_to_delete.delete
 
@@ -582,13 +592,15 @@ while choice != 0
           puts "Category deleted"
         else
           puts "Cannot delete this category while shoes are assigned."
-          category_to_delete.shoes.each do |shoes_hash|
-            puts "#{shoes_hash['id']} - #{shoes_hash['name']} (#{shoes_hash['location_stock']})"
+          category_to_delete.shoes.each do |shoes|
+            puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
           end
         end
       end
 
       ##### Re-asks the user for an option--------------------------------------
+      40.times {print "-"}
+      puts "\n"
       puts "What would you like to do?"
       40.times {print "-"}
       puts "\n"
@@ -609,9 +621,9 @@ while choice != 0
   if choice == 8
     puts "Which product would you like to delete?"
     shoe_range = []
-    Shoe.all.each do |shoe_hash|
-      puts "#{shoe_hash['id']} - #{shoe_hash['name']}"
-      shoe_range.push(shoe_hash['id'])
+    Shoe.all.each do |shoe|
+      puts "#{shoe.id} - #{shoe.name}"
+      shoe_range << shoe.id
     end
     print ">> "
     shoe_choice = gets.to_i
@@ -622,10 +634,10 @@ while choice != 0
       shoe_choice = gets.to_i
     end
 
-    shoe_to_delete = Shoe.new(shoe_choice)
+    shoe_to_delete = Shoe.find(shoe_choice)
 
-    shoe_to_delete.information.each do |shoe_hash|
-      puts "ID: #{shoe_hash['id']}, Name: #{shoe_hash['name']}, Cost: #{shoe_hash['cost']}, Color: #{shoe_hash['color']}, Category: #{shoe_hash['category_id']}, Location: #{shoe_hash['location_id']}"
+    shoe_to_delete.each do |shoe|
+      puts "ID: #{shoe.id}, Name: #{shoe.name}, Cost: #{shoe.cost}, Color: #{shoe.color}, Category: #{shoe.category_id}, Location: #{shoe.location_id}, Quantity: #{shoe.location_stock}"
     end
 
     puts "Are you sure you wish to delete this product? (yes/no)"
