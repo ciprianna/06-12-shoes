@@ -53,7 +53,9 @@ class Shoe
 
     temp_id = DATABASE.last_insert_row_id
 
-    Shoe.new(temp_id, new_object['name'], new_object['cost'], new_object['color'], new_object['category_id'], new_object['location_id'], new_object['location_stock'])
+    object = Shoe.new(temp_id, new_object['name'], new_object['cost'], new_object['color'], new_object['category_id'], new_object['location_id'], new_object['location_stock'])
+
+    return object
   end
 
   # Read method for the shoes table
@@ -67,6 +69,8 @@ class Shoe
     results.each do |hash|
       store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
+
+    return store_results
   end
 
   # Sums all of the product inventory
@@ -76,6 +80,7 @@ class Shoe
     sum = DATABASE.execute("SELECT SUM(location_stock) FROM shoes;").first
 
     sum = sum[0]
+    return sum
   end
 
   # Shows all products by cost categories
@@ -99,6 +104,8 @@ class Shoe
     results.each do |hash|
       store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
+
+    return store_results
   end
 
   # Reads all products with low quantities in location_stock.
@@ -113,6 +120,8 @@ class Shoe
     results.each do |hash|
       store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
+
+    return store_results
   end
 
   # Updates the shoes table in the database.
@@ -126,9 +135,15 @@ class Shoe
   #
   # Returns newly updated Shoe object
   def save
-    saved_data = DATABASE.execute("UPDATE shoes SET name = #{@name}, cost = #{@cost}, color = #{@color}, category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock};").first
+    saved_data = DATABASE.execute("UPDATE shoes SET name = #{self.name}, cost = #{self.cost}, color = #{self.color}, category_id = #{self.category_id}, location_id = #{self.location_id}, location_stock = #{self.location_stock};")
 
-    Shoe.new(saved_data['id'], saved_data['name'], saved_data['cost'], saved_data['color'], saved_data['category_id'], saved_data['location_id'], saved_data['location_stock'])
+    store_results = []
+
+    saved_date.each do |shoe|
+      store_results << Shoe.new(saved_data['id'], saved_data['name'], saved_data['cost'], saved_data['color'], saved_data['category_id'], saved_data['location_id'], saved_data['location_stock'])
+    end
+
+    return store_results
   end
 
   # Updates the quantity of a product for a given id
@@ -137,9 +152,16 @@ class Shoe
   #
   # Returns the newly updated Shoe object.
   def update_quantity(to_add)
-    results = DATABASE.execute("UPDATE shoes SET location_stock = #{@location_stock + to_add} WHERE id = #{@id};").first
+    current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first
+    results = DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity['location_stock'] + to_add} WHERE id = #{@id};")
 
-    Shoe.new(results['id'], results['name'], results['cost'], results['color'], results['category_id'], results['location_id'], results['location_stock'])
+    store_results = []
+
+    results.each do |shoe|
+      store_results << Shoe.new(results['id'], results['name'], results['cost'], results['color'], results['category_id'], results['location_id'], results['location_stock'])
+    end
+
+    return store_results
   end
 
   # Deletes a shoe row from the shoes table
@@ -154,6 +176,8 @@ class Shoe
     results.each do |hash|
       store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
+
+    return store_results
   end
 
 end

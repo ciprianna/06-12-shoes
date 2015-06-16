@@ -26,7 +26,9 @@ class Category
 
     temp_id = DATABASE.last_insert_row_id
 
-    Category.new(temp_id, hash['name'])
+    object = Category.new(temp_id, hash['name'])
+
+    return object
   end
 
   # Locates a row from the categories table for the passed id.
@@ -40,7 +42,9 @@ class Category
 
     results = DATABASE.execute("SELECT * FROM categories WHERE id = #{@id};").first
 
-    Categories.new(id, results['name'])
+    object = Categories.new(id, results['name'])
+
+    return object
   end
 
   # Read method for the categories table
@@ -55,6 +59,8 @@ class Category
     results.each do |hash|
       store_results << Category.new(hash['id'], hash['name'])
     end
+
+    return store_results
   end
 
   # Reads all shoes in a category object
@@ -69,6 +75,8 @@ class Category
     results.each do |hash|
       store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
+
+    return store_results
   end
 
   # Update method for the categories table
@@ -77,7 +85,9 @@ class Category
   def save
     results = DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};").first
 
-    Category.new(results['id'], results['name'])
+    object = Category.new(results['id'], results['name'])
+
+    return object
   end
 
   # Checks to see if the category contains no products.
@@ -99,6 +109,8 @@ class Category
       results.each do |hash|
         store_results << Category.new(hash['id'], hash['name'])
       end
+
+      return store_results
     end
   end
 

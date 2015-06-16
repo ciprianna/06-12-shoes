@@ -51,7 +51,7 @@ while choice != 0
 ##### Displays all products-----------------------------------------------------
   if choice == 1
     Shoe.all.each do |shoe_object|
-    puts "ID: #{shoe_object.id}, Name: #{shoe_object.name}, Cost: #{shoe_object.cost}, Color: #{shoe_object.color}, Category: #{shoe_object.category_id}, Location: #{shoe_object.location_id}, Quantity: #{shoe_object.location_stock}"
+      puts "ID: #{shoe_object.id}, Name: #{shoe_object.name}, Cost: #{shoe_object.cost}, Color: #{shoe_object.color}, Category: #{shoe_object.category_id}, Location: #{shoe_object.location_id}, Quantity: #{shoe_object.location_stock}"
     end
   end
 ##### Quantity information menu; gives a list of sub-options--------------------
@@ -97,7 +97,7 @@ while choice != 0
         quantity_range = []
         Shoe.all.each do |shoe_object|
           puts "#{shoe_object.id} - #{shoe_object.name}"
-          quantity_range << shoe_object.'id'
+          quantity_range << shoe_object.id
         end
         print ">> "
         shoe_to_change = gets.to_i

@@ -23,7 +23,9 @@ class Location
 
     temp_id = DATABASE.last_insert_row_id
 
-    Location.new(temp_id, results['location_name'])
+    object = Location.new(temp_id, results['location_name'])
+
+    return object
   end
 
   # Read method for the locations table
@@ -38,6 +40,8 @@ class Location
     results.each do |hash|
       store_results << Location.new(hash['id'], hash['name'])
     end
+
+    return store_results
   end
 
   # Reads all shoes at a location object
@@ -53,6 +57,8 @@ class Location
     results.each do |hash|
       store_results << Location.new(hash['id'], hash['name'])
     end
+
+    return store_results
   end
 
   # Update method for the locations table
@@ -61,7 +67,9 @@ class Location
   def save
     result = DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};").first
 
-    Location.new(result['id'], result['name'])
+    object = Location.new(result['id'], result['name'])
+
+    return object
   end
 
   # Checks to see if the location contains no products.
@@ -83,6 +91,8 @@ class Location
       results.each do |hash|
         store_results << Location.new(hash['id'], hash['name'])
       end
+
+      return store_results
     end
   end
 
