@@ -2,6 +2,9 @@
 
 class Location
 
+  attr_reader :id
+  attr_accessor :name
+
   # Assigns an id for identification in instance methods
   #
   # id - Integer assigned as the primary key
@@ -19,11 +22,26 @@ class Location
   #
   # Returns the newly created Location Object
   def self.add(location_name)
-    results = DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');").first
+    DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');")
 
     temp_id = DATABASE.last_insert_row_id
 
-    object = Location.new(temp_id, results['location_name'])
+    object = Location.new(temp_id, location_name)
+
+    return object
+  end
+
+  # Locates a row from the locations table for the passed id.
+  #
+  # id - primary key; Integer
+  #
+  # Returns Location object
+  def self.find(id)
+    @id = id
+
+    results = DATABASE.execute("SELECT * FROM locations WHERE id = #{@id};").first
+
+    object = Location.new(id, results['name'])
 
     return object
   end
@@ -55,7 +73,7 @@ class Location
     store_results = []
 
     results.each do |hash|
-      store_results << Location.new(hash['id'], hash['name'])
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
 
     return store_results
@@ -63,27 +81,25 @@ class Location
 
   # Update method for the locations table
   #
-  # Returns the newly updated row as a Location Object
+  # Returns true/false Boolean
   def save
-    result = DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};").first
+    if
+      DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};")
 
-    object = Location.new(result['id'], result['name'])
+      return true
 
-    return object
-  end
+    else
 
-  # Checks to see if the location contains no products.
-  #
-  # Returns true or false - Binary
-  def empty?
-    self.shoes == []
+      return false
+
+    end
   end
 
   # Delete a category row from the categories table
   #
   # Returns true/false Boolean
   def delete
-    if self.empty?
+    if self.shoes.empty?
       DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
       return true
     else

@@ -22,11 +22,11 @@ class Category
   #
   # Returns the new Category Object
   def self.add(category_name)
-    results = DATABASE.execute("INSERT INTO categories (name) VALUES ('#{category_name}');")
+    DATABASE.execute("INSERT INTO categories (name) VALUES ('#{category_name}');")
 
     temp_id = DATABASE.last_insert_row_id
 
-    object = Category.new(temp_id, hash['name'])
+    object = Category.new(temp_id, category_name)
 
     return object
   end
@@ -35,14 +35,13 @@ class Category
   #
   # id - primary key; Integer
   #
-  # Returns Category object representing the selected row from the categories
-  #   table.
+  # Returns Category object
   def self.find(id)
     @id = id
 
     results = DATABASE.execute("SELECT * FROM categories WHERE id = #{@id};").first
 
-    object = Categories.new(id, results['name'])
+    object = Category.new(id, results['name'])
 
     return object
   end
@@ -81,27 +80,25 @@ class Category
 
   # Update method for the categories table
   #
-  # Returns a Category Object for the newly changed row
+  # Returns true/false Boolean
   def save
-    results = DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};").first
+    if
+      DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};")
 
-    object = Category.new(results['id'], results['name'])
+      return true
 
-    return object
-  end
+    else
 
-  # Checks to see if the category contains no products.
-  #
-  # Returns true or false - Binary
-  def empty?
-    self.shoes == []
+      return false
+
+    end
   end
 
   # Delete a category from the categories table
   #
-  # Returns an Array containing the remaining rows as Category Objects
+  # Returns true/false Boolean
   def delete
-    if self.empty?
+    if self.shoes.empty?
       DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
       return true
     else

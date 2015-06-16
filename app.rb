@@ -153,7 +153,7 @@ while choice != 0
     puts "Category:"
     category_range = []
     Category.all.each do |category|
-      puts "#{category.id} - #{category.id}"
+      puts "#{category.id} - #{category.name}"
       category_range << category.id
     end
     print ">> "
@@ -208,9 +208,7 @@ while choice != 0
     shoe_to_change = Shoe.find(shoe)
 
     ##### Displays all information pertaining to the selected shoe--------------
-    shoe_to_change.find.each do |shoe|
-      puts "ID: #{shoe.id}, Name: #{shoe.name}, Cost: #{shoe.cost}, Color: #{shoe.color}, Category: #{shoe.category_id}, Location: #{shoe.location_id}, Quantity: #{shoe.location_stock}"
-    end
+    puts "ID: #{shoe_to_change.id}, Name: #{shoe_to_change.name}, Cost: #{shoe_to_change.cost}, Color: #{shoe_to_change.color}, Category: #{shoe_to_change.category_id}, Location: #{shoe_to_change.location_id}, Quantity: #{shoe_to_change.location_stock}"
 
     ##### Sub-menu for updating-------------------------------------------------
     puts "And what would you like to update?"
@@ -314,7 +312,11 @@ while choice != 0
 
     end
 
-    shoe_to_change.save
+    if shoe_to_change.save
+      puts "Product update successful."
+    else
+      puts "Product update failed to save."
+    end
 
   end
 
@@ -389,9 +391,11 @@ while choice != 0
         end
 
         location_to_view = Location.find(location)
+
         location_to_view.shoes.each do |shoes|
           puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
         end
+
       end
 
       ##### Changes the name of a location--------------------------------------
@@ -418,7 +422,12 @@ while choice != 0
         new_location_name = gets.chomp
 
         location_to_change.name = new_location_name
-        location_to_change.save
+
+        if location_to_change.save
+          puts "Location name changed."
+        else
+          puts "Name change failed."
+        end
       end
 
       ##### Adds a new location-------------------------------------------------
@@ -636,9 +645,7 @@ while choice != 0
 
     shoe_to_delete = Shoe.find(shoe_choice)
 
-    shoe_to_delete.each do |shoe|
-      puts "ID: #{shoe.id}, Name: #{shoe.name}, Cost: #{shoe.cost}, Color: #{shoe.color}, Category: #{shoe.category_id}, Location: #{shoe.location_id}, Quantity: #{shoe.location_stock}"
-    end
+    puts "ID: #{shoe_to_delete.id}, Name: #{shoe_to_delete.name}, Cost: #{shoe_to_delete.cost}, Color: #{shoe_to_delete.color}, Category: #{shoe_to_delete.category_id}, Location: #{shoe_to_delete.location_id}, Quantity: #{shoe_to_delete.location_stock}"
 
     puts "Are you sure you wish to delete this product? (yes/no)"
     print ">> "

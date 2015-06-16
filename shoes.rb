@@ -28,7 +28,7 @@ class Shoe
 
   # Read method for a single shoe product (row) in the shoes table
   #
-  # Returns a Shoe Object for the selected row with the passed id attribute
+  # Returns a Shoe Object.
   def self.find(id)
     @id = id
 
@@ -49,18 +49,18 @@ class Shoe
   #
   # Returns the new Shoe Object created.
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
-    new_object = DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});").first
+    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
 
     temp_id = DATABASE.last_insert_row_id
 
-    object = Shoe.new(temp_id, new_object['name'], new_object['cost'], new_object['color'], new_object['category_id'], new_object['location_id'], new_object['location_stock'])
+    Shoe.new(temp_id, shoe_name, cost, color, category_id, location_id, quantity)
 
-    return object
+    return self
   end
 
   # Read method for the shoes table
   #
-  # Returns an Array containing all rows as Shoe objects
+  # Returns an Array containing all rows as Shoe Objects.
   def self.all
     results = DATABASE.execute("SELECT * FROM shoes;")
 
@@ -87,9 +87,7 @@ class Shoe
   #
   # cost_category - String, should be categories of high, medium, or low
   #
-  # Returns an Array containing all row information which meets the WHERE
-  #   criterion selected. Rows are represented as Shoe objects in the returned
-  #   Array.
+  # Returns an Array containing rows as Shoe objects.
   def self.where_cost(cost_category)
     if cost_category == "high"
       results = DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100;")
@@ -110,8 +108,7 @@ class Shoe
 
   # Reads all products with low quantities in location_stock.
   #
-  # Returns an Array containing all row information which meets the WHERE
-  #   criterion. Rows are represented as Shoe objects in the returned Array.
+  # Returns an Array containing rows as Shoe Objects.
   def self.where_quantity_is_low
     results = DATABASE.execute("SELECT * FROM shoes WHERE location_stock < 5;")
 
@@ -126,14 +123,14 @@ class Shoe
 
   # Updates the shoes table in the database.
   #
-  # shoe_name - String
-  # cost - Integer
-  # color - String
+  # shoe_name - String for the shoe's name
+  # cost - Integer for the cost of the shoe
+  # color - String for the color of the shoe
   # category_id - Integer, foreign key from the categories table
   # location_id - Integer, foreign key from the locations table
-  # quantity - Integer, to be added to the location_stock column
+  # quantity - Integer for the location_stock column
   #
-  # Returns newly updated Shoe object
+  # Returns true/false Boolean.
   def save
     if
       DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
@@ -143,12 +140,11 @@ class Shoe
     else
       return false
     end
-    # Shoe.new(saved_data['id'], saved_data['name'], saved_data['cost'], saved_data['color'], saved_data['category_id'], saved_data['location_id'], saved_data['location_stock'])
   end
 
   # Updates the quantity of a product for a given id
   #
-  # to_add - Integer
+  # to_add - Integer for the number to add to the location_stock value
   #
   # Returns the location_stock attribute - Integer.
   def update_quantity(to_add)
@@ -161,8 +157,7 @@ class Shoe
 
   # Deletes a shoe row from the shoes table
   #
-  # Returns an Array containing the remaining rows in the shoes table as Shoe
-  #   objects.
+  # Returns true/false Boolean
   def delete
     if
       DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
