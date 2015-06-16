@@ -2,13 +2,41 @@
 
 class Shoe
 
+  attr_reader :id
+  attr_accessor :name, :cost, :color, :category_id, :location_id, :location_stock
+
   # Assigns an id for identification in instance methods
   #
   # id - Integer assigned as the primary key from the id column
+  # name - String
+  # cost - Integer
+  # color - String
+  # category_id - Integer, foreign key from the categories table
+  # location_id - Integer, foreign key from the locations table
+  # location_stock - Integer indicating quantity of product
   #
-  # Returns object created
-  def initialize(id)
+  # Returns Shoe object created
+  def initialize(id = nil, name = nil, cost = nil, color = nil, category_id = nil, location_id = nil, location_stock = nil)
     @id = id
+    @name = name
+    @cost = cost
+    @color = color
+    @category_id = category_id
+    @location_id = location_id
+    @location_stock = location_stock
+  end
+
+  # Read method for a single shoe product (row) in the shoes table
+  #
+  # Returns an Array containing one Shoe object for the id selected.
+  def find
+    results = DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
   # Creates a new shoe (row) in the shoes table
@@ -20,25 +48,30 @@ class Shoe
   # location_id - Integer, foreign key from the locations table
   # quantity - Integer, to be added to the location_stock column
   #
-  # Returns an empty Array
+  # Returns an Array containing the new Shoe object
   def self.add(shoe_name, cost, color, category_id, location_id, quantity)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
+    new_object = DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', '#{category_id}', '#{location_id}', #{quantity});")
+
+    new_object_store = []
+
+    temp_id = DATABASE.last_insert_row_id
+
+    new_object.each do |hash|
+      new_object_store << Shoe.new(temp_id, hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
   # Read method for the shoes table
   #
-  # Returns all rows from the shoes table as an Array of Hashes. Each Hash is
-  #   a row of data.
+  # Returns an Array containing all rows as Shoe objects
   def self.all
-    DATABASE.execute("SELECT * FROM shoes;")
-  end
+    results = DATABASE.execute("SELECT * FROM shoes;")
 
-  # Read method for stock quantities
-  #
-  # Returns id - Integer, name - String, and location_stock - Integer, from
-  #   shoes table as an Array of Hashes. Each Hash corresponds to a row of data.
-  def self.quantity
-    DATABASE.execute("SELECT id, name, location_stock FROM shoes;")
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
   # Sums all of the product inventory
@@ -52,116 +85,85 @@ class Shoe
   #
   # cost_category - String, should be categories of high, medium, or low
   #
-  # Returns all row information where the condition is true as an Array of
-  #   Hashes. Each Hash corresponds to a row of data in the shoes table that
-  #   meets the criteria in the WHERE statement.
+  # Returns an Array containing all row information which meets the WHERE
+  #   criterion selected. Rows are represented as Shoe objects in the returned
+  #   Array.
   def self.where_cost(cost_category)
     if cost_category == "high"
-      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100;")
+      results = DATABASE.execute("SELECT * FROM shoes WHERE cost >= 100;")
     elsif cost_category == "medium"
-      DATABASE.execute("SELECT * FROM shoes WHERE cost >= 50 AND cost < 100;")
+      results = DATABASE.execute("SELECT * FROM shoes WHERE cost >= 50 AND cost < 100;")
     else
-      DATABASE.execute("SELECT * FROM shoes WHERE cost < 50;")
+      results = DATABASE.execute("SELECT * FROM shoes WHERE cost < 50;")
+    end
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
     end
   end
 
   # Reads all products with low quantities in location_stock.
   #
-  # Returns all row information, for only rows where location_stock is less than
-  #   5, as an Array of Hashes. Each Hash corresponds to a row of data in the
-  #   shoes table that meets the criteria in the WHERE statement.
+  # Returns an Array containing all row information which meets the WHERE
+  #   criterion. Rows are represented as Shoe objects in the returned Array.
   def self.where_quantity_is_low
-    DATABASE.execute("SELECT * FROM shoes WHERE location_stock < 5;")
+    results = DATABASE.execute("SELECT * FROM shoes WHERE location_stock < 5;")
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
-  # Read method for a single shoe product (row) in the shoes table
+  # Updates the shoes table in the database.
   #
-  # Returns row of information as an Array with a single Hash. The Hash
-  #   corresponds to the row of data that matches the given id.
-  def information
-    DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};")
-  end
+  # shoe_name - String
+  # cost - Integer
+  # color - String
+  # category_id - Integer, foreign key from the categories table
+  # location_id - Integer, foreign key from the locations table
+  # quantity - Integer, to be added to the location_stock column
+  #
+  # Returns newly updated Shoe object
+  def save
+    saved_data = DATABASE.execute("UPDATE shoes SET name = #{@name}, cost = #{@cost}, color = #{@color}, category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock};")
 
-  # Update any value for a given field that takes Strings
-  #
-  # field_name - String
-  # new_value - String
-  #
-  # Returns an empty Array
-  def update_strings(field_name, new_value)
-    DATABASE.execute("UPDATE shoes SET #{field_name} = '#{new_value}' WHERE id = #{@id};")
-  end
-
-  # Update any value for a given field that takes Integers
-  #
-  # field_name - String
-  # new_value - Integer
-  #
-  # Returns an empty Array
-  def update_integers(field_name, new_value)
-    DATABASE.execute("UPDATE shoes SET #{field_name} = #{new_value} WHERE id = #{@id};")
-  end
-
-  # Updates the name value in the shoes table
-  #
-  # new_name - String
-  #
-  # Returns an empty Array
-  def update_name(new_name)
-    update_strings("name", new_name)
-  end
-
-  # Updates the cost value in the shoes table
-  #
-  # new_cost - Integer
-  #
-  # Returns an empty Array
-  def update_cost(new_cost)
-    update_integers("cost", new_cost)
-  end
-
-  # Updates the color value in the shoes table
-  #
-  # new_color - String
-  #
-  # Returns an empty Array
-  def update_color(new_color)
-    update_strings("color", new_color)
-  end
-
-  # Assigns/updates the location_id of a shoe instance
-  #
-  # new_location_id - Integer
-  #
-  # Returns an empty Array
-  def update_location(new_location_id)
-    update_integers("location_id", new_location_id)
+    changed_data = []
+    saved_data.each do |hash|
+      changed_data << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
   # Updates the quantity of a product for a given id
   #
   # to_add - Integer
   #
-  # Returns an empty Array
+  # Returns an Array containing the newly updated Shoe object.
   def update_quantity(to_add)
-    current_quantity = DATABASE.execute("SELECT location_stock FROM shoes WHERE id = #{@id};").first['location_stock']
-    DATABASE.execute("UPDATE shoes SET location_stock = #{current_quantity + to_add} WHERE id = #{@id};")
-  end
+    results = DATABASE.execute("UPDATE shoes SET location_stock = #{@location_stock + to_add} WHERE id = #{@id};")
 
-  # Assigns/updates the category_id of a shoe instance
-  #
-  # new_category_id - Integer
-  #
-  # Returns an empty Array
-  def update_category(new_category_id)
-    update_integers("category_id", new_category_id)
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
   # Deletes a shoe row from the shoes table
   #
-  # Returns an empty Array
+  # Returns an Array containing the remaining rows in the shoes table as Shoe
+  #   objects.
   def delete
-    DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
+    results = DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
+
+    store_results = []
+
+    results.each do |hash|
+      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+    end
   end
 
 end
