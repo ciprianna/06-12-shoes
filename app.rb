@@ -85,52 +85,47 @@ while choice != 0
 
 ##### Adds a new item to the inventory------------------------------------------
   if choice == 3
-    puts "Okay, please enter the product information."
-    puts "Shoe name:"
-    print ">> "
-    name = gets.chomp
-    puts "Cost:"
-    print ">> "
-    cost = gets.to_f
-    puts "Color:"
-    print ">> "
-    color = gets.chomp
-    puts "Category:"
-    category_range = []
-    Category.all.each do |category|
-      puts "#{category.id} - #{category.name}"
-      category_range << category.id
-    end
-    print ">> "
-    category_id = gets.to_i
+    puts "Okay, there's a new shoe to add to the inventory. Press anything to continue or type '0' to exit."
+    continue = gets.chomp
 
-    while !category_range.include?(category_id)
-      puts "Please choose a category id from the options:"
+    while continue != '0'
+      new_shoe_object = Shoe.new
+      puts "Shoe name:"
+      print ">> "
+      new_shoe_object.name = gets.chomp
+      puts "Cost:"
+      print ">> "
+      new_shoe_object.cost = gets.to_f
+      puts "Color:"
+      print ">> "
+      new_shoe_object.color = gets.chomp
+      puts "Category:"
+      category_range = list_all_store_range(Category)
       print ">> "
       category_id = gets.to_i
-    end
 
-    puts "Storage location:"
-    location_range = []
-    Location.all.each do |location|
-      puts "#{location.id} - #{location.name}"
-      location_range << location.id
-    end
-    print ">> "
-    location_id = gets.to_i
+      new_shoe_object.category_id = valid_response_entered(category_range, category_id)
 
-    while !location_range.include?(location_id)
-      puts "Please choose a location id from the options:"
+      puts "Storage location:"
+      location_range = list_all_store_range(Location)
       print ">> "
       location_id = gets.to_i
+
+      new_shoe_object.location_id = valid_response_entered(location_range, location_id)
+
+      puts "Quantity:"
+      print ">> "
+      new_shoe_object.location_stock = gets.to_i
+
+      if new_shoe_object.add_to_database
+        puts "Product added to inventory."
+      else
+        puts "Product could not be added - Missing Information."
+      end
+
+      puts "Press anything to add another new shoe to the Inventory. Otherwise, type '0' to exit."
+      continue = gets.chomp
     end
-
-    puts "Quantity:"
-    print ">> "
-    quantity = gets.to_i
-    Shoe.add(name, cost, color, category_id, location_id, quantity)
-
-    puts "Product added to inventory."
   end
 
 ##### Updates a product's information-------------------------------------------

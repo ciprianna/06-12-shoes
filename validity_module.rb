@@ -17,7 +17,7 @@ end
 
 # Method to ensure that all fields are valid in a Shoe Object
 #
-# Returns true/false Boolean
+# Returns valid - true/false Boolean
 def valid?
   valid = true
 
@@ -25,23 +25,18 @@ def valid?
     valid = false
   end
 
-  if cost.nil? || name == ""
+  if cost.nil? || cost == ""
     valid = false
   end
 
-  if color.nil? || name == ""
+  if color.nil? || color == ""
     valid = false
   end
 
-  if category_id.nil? || name == ""
+  if location_stock.nil? || location_stock == ""
     valid = false
   end
 
-  if location_id.nil? || name == ""
-    valid = false
-  end
+  return valid
 
-  if location_stock.nil? || name == ""
-    valid = false
-  end
 end
