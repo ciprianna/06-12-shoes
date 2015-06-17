@@ -145,10 +145,8 @@ class Shoe
   #
   # Returns true/false Boolean.
   def save
-    if
+    if valid?
       DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
-
-      return true
 
     else
       return false

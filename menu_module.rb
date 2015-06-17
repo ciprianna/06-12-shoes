@@ -25,7 +25,7 @@ def main_menu
 
   range = [1, 2, 3, 4, 5, 6, 7, 8, 0]
 
-  valid_response_entered(range, choice)
+  valid_response_check(range, choice)
 
   return choice
 
@@ -49,9 +49,56 @@ def quantity_menu
 
   quantity_choice_range = [0, 1, 2, 3]
 
-  valid_response_entered(quantity_choice_range, quantity_choice)
+  valid_response_check(quantity_choice_range, quantity_choice)
 
   return quantity_choice
+end
+
+# Sub-Menu for tasks relating to updating a product
+#
+# Returns to_update - Integer, menu selection
+def update_product_menu
+  40.times {print "-"}
+  puts "\n"
+  puts "1".ljust(10) + "Name".rjust(30)
+  puts "2".ljust(10) + "Cost".rjust(30)
+  puts "3".ljust(10) + "Color".rjust(30)
+  puts "4".ljust(10) + "Category".rjust(30)
+  puts "5".ljust(10) + "Location".rjust(30)
+  puts "0".ljust(10) + "Exit product update".rjust(30)
+  print ">> "
+  to_update = gets.to_i
+
+  range_for_updates = [0, 1, 2, 3, 4, 5]
+
+  valid_response_check(range_for_updates, to_update)
+
+  return to_update
+end
+
+# Sub-Menu for location-related tasks to select.
+#
+# Returns location_choice - Integer
+def locations_menu
+  40.times {print "-"}
+  puts "\n"
+  puts "What would you like to do?"
+  40.times {print "-"}
+  puts "\n"
+  puts "1".ljust(10) + "View all locations".rjust(30)
+  puts "2".ljust(10) + "View all products at a location".rjust(30)
+  puts "3".ljust(10) + "Change location name".rjust(30)
+  puts "4".ljust(10) + "Add new location".rjust(30)
+  puts "5".ljust(10) + "Delete location".rjust(30)
+  puts "0".ljust(10) + "Exit location information".rjust(30)
+  print ">> "
+  location_choice = gets.to_i
+
+  range_for_locations = [0, 1, 2, 3, 4, 5]
+
+  valid_response_check(range_for_locations, location_choice)
+
+  return location_choice
 end
 
 # Lists all Objects in a Class like a menu

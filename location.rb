@@ -7,8 +7,8 @@ class Location
 
   # Assigns an id for identification in instance methods
   #
-  # id - Integer assigned as the primary key
-  # name - String
+  # id (optional) - Integer assigned as the primary key
+  # name (optional) - String
   #
   # Returns newly created Location Object
   def initialize(id = nil, name = nil)
@@ -29,6 +29,19 @@ class Location
     object = Location.new(temp_id, location_name)
 
     return object
+  end
+
+  # Adds a Location Object to the locations table
+  #
+  # Returns id of Object if created - Integer, else returns false
+  def add_to_database
+    if valid_name?
+      DATABASE.execute("INSERT INTO locations (name) VALUES ('#{@name}');")
+
+      @id = DATABASE.last_insert_row_id
+    else
+      return false
+    end
   end
 
   # Locates a row from the locations table for the passed id.
@@ -83,15 +96,10 @@ class Location
   #
   # Returns true/false Boolean
   def save
-    if
+    if valid_name?
       DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};")
-
-      return true
-
     else
-
       return false
-
     end
   end
 

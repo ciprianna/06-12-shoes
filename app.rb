@@ -61,7 +61,7 @@ while choice != 0
         print ">> "
         shoe_to_change = gets.to_i
 
-        shoe_to_change = valid_response_entered(quantity_range, shoe_to_change)
+        shoe_to_change = valid_response_check(quantity_range, shoe_to_change)
 
         shoe = Shoe.find(shoe_to_change)
 
@@ -104,14 +104,14 @@ while choice != 0
       print ">> "
       category_id = gets.to_i
 
-      new_shoe_object.category_id = valid_response_entered(category_range, category_id)
+      new_shoe_object.category_id = valid_response_check(category_range, category_id)
 
       puts "Storage location:"
       location_range = list_all_store_range(Location)
       print ">> "
       location_id = gets.to_i
 
-      new_shoe_object.location_id = valid_response_entered(location_range, location_id)
+      new_shoe_object.location_id = valid_response_check(location_range, location_id)
 
       puts "Quantity:"
       print ">> "
@@ -131,19 +131,11 @@ while choice != 0
 ##### Updates a product's information-------------------------------------------
   if choice == 4
     puts "Which product would you like to update?"
-    shoe_range = []
-    Shoe.all.each do |shoe|
-      puts "#{shoe.id} - #{shoe.name}"
-      shoe_range << shoe.id
-    end
+    shoe_range = list_all_store_range(Shoe)
     print ">> "
     shoe = gets.to_i
 
-    while !shoe_range.include?(shoe)
-      puts "Please choose an id from the options:"
-      print ">> "
-      shoe = gets.to_i
-    end
+    shoe = valid_response_check(shoe_range, shoe)
 
     shoe_to_change = Shoe.find(shoe)
 
@@ -151,24 +143,10 @@ while choice != 0
     puts "ID: #{shoe_to_change.id}, Name: #{shoe_to_change.name}, Cost: #{shoe_to_change.cost}, Color: #{shoe_to_change.color}, Category: #{shoe_to_change.category_id}, Location: #{shoe_to_change.location_id}, Quantity: #{shoe_to_change.location_stock}"
 
     ##### Sub-menu for updating-------------------------------------------------
-    puts "And what would you like to update?"
     40.times {print "-"}
     puts "\n"
-    puts "1".ljust(10) + "Name".rjust(30)
-    puts "2".ljust(10) + "Cost".rjust(30)
-    puts "3".ljust(10) + "Color".rjust(30)
-    puts "4".ljust(10) + "Category".rjust(30)
-    puts "5".ljust(10) + "Location".rjust(30)
-    puts "0".ljust(10) + "Exit product update".rjust(30)
-    print ">> "
-    to_update = gets.to_i
-
-    range_for_updates = [0, 1, 2, 3, 4, 5]
-    while !range_for_updates.include?(to_update)
-      puts "Please choose a number from the menu"
-      print ">> "
-      to_update = gets.to_i
-    end
+    puts "What would you like to update?"
+    to_update = update_product_menu
 
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while to_update != 0
@@ -200,19 +178,11 @@ while choice != 0
       ##### Updates the category_id of the shoe---------------------------------
       if to_update == 4
         puts "What is the new category of the shoe?"
-        category_range = []
-        Category.all.each do |category|
-          puts "#{category.id} - #{category.name}"
-          category_range << category.id
-        end
+        category_range = list_all_store_range(Category)
         print ">> "
         new_category_id = gets.to_i
 
-        while !category_range.include?(new_category_id)
-          puts "Please choose a category id from the options:"
-          print ">> "
-          new_category_id = gets.to_i
-        end
+        new_category_id = valid_response_check(category_range, new_category_id)
 
         shoe_to_change.category_id = new_category_id
       end
@@ -238,17 +208,11 @@ while choice != 0
       end
 
       ##### Re-asks what option the user would like to choose-------------------
-      puts "Is there anything else to update for this product?"
       40.times {print "-"}
       puts "\n"
-      puts "1".ljust(10) + "Name".rjust(30)
-      puts "2".ljust(10) + "Cost".rjust(30)
-      puts "3".ljust(10) + "Color".rjust(30)
-      puts "4".ljust(10) + "Category".rjust(30)
-      puts "5".ljust(10) + "Location".rjust(30)
-      puts "0".ljust(10) + "Exit product update".rjust(30)
-      print ">> "
-      to_update = gets.to_i
+      puts "Is there anything else to update for this product?"
+
+      to_update = update_product_menu
 
     end
 
@@ -283,24 +247,7 @@ while choice != 0
 
 ##### Displays options for the locations menu-----------------------------------
   if choice == 6
-    puts "What would you like to do?"
-    40.times {print "-"}
-    puts "\n"
-    puts "1".ljust(10) + "View all locations".rjust(30)
-    puts "2".ljust(10) + "View all products at a location".rjust(30)
-    puts "3".ljust(10) + "Change location name".rjust(30)
-    puts "4".ljust(10) + "Add new location".rjust(30)
-    puts "5".ljust(10) + "Delete location".rjust(30)
-    puts "0".ljust(10) + "Exit location information".rjust(30)
-    print ">> "
-    location_choice = gets.to_i
-
-    range_for_locations = [0, 1, 2, 3, 4, 5]
-    while !range_for_locations.include?(location_choice)
-      puts "Please choose a number from the menu"
-      print ">> "
-      location_choice = gets.to_i
-    end
+    location_choice = locations_menu
 
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while location_choice != 0
@@ -308,27 +255,17 @@ while choice != 0
       ##### Displays all locations----------------------------------------------
       if location_choice == 1
         puts "Locations:"
-        Location.all.each do |location|
-          puts "#{location.id} - #{location.name}"
-        end
+        list_all(Location)
       end
 
       ##### Displays all products at an instance of a location------------------
       if location_choice == 2
         puts "Which location would you like to view products at?"
-        location_range = []
-        Location.all.each do |location|
-          puts "#{location.id} - #{location.name}"
-          location_range << location.id
-        end
+        location_range = list_all_store_range(Location)
         print ">> "
         location = gets.to_i
 
-        while !location_range.include?(location)
-          puts "Please choose a location id from the options:"
-          print ">> "
-          location = gets.to_i
-        end
+        location = valid_response_check(location_range, location)
 
         location_to_view = Location.find(location)
 
@@ -341,19 +278,11 @@ while choice != 0
       ##### Changes the name of a location--------------------------------------
       if location_choice == 3
         puts "Which location would you like to change the name of?"
-        location_range = []
-        Location.all.each do |location|
-          puts "#{location.id} - #{location.name}"
-          location_range << location.id
-        end
+        location_range = list_all_store_range(Location)
         print ">> "
         location = gets.to_i
 
-        while !location_range.include?(location)
-          puts "Please choose a location id from the options:"
-          print ">> "
-          location = gets.to_i
-        end
+        location = valid_response_check(location_range, location)
 
         location_to_change = Location.find(location)
 
@@ -375,25 +304,24 @@ while choice != 0
         puts "What's the name of the new location?"
         print ">> "
         new_location = gets.chomp
-        Location.add(new_location)
+        location_to_add = Location.new
+        location_to_add.name = new_location
+
+        if location_to_add.add_to_database
+          puts "Location added."
+        else
+          puts "Failed to add location."
+        end
       end
 
       ##### Deletes a location, after checking to ensure nothing is stored there
       if location_choice == 5
         puts "Which location would you like to delete?"
-        location_range = []
-        Location.all.each do |location|
-          puts "#{location.id} - #{location.name}"
-          location_range << location.id
-        end
+        location_range = list_all_store_range(Location)
         print ">> "
         location = gets.to_i
 
-        while !location_range.include?(location)
-          puts "Please choose a location id from the options:"
-          print ">> "
-          location = gets.to_i
-        end
+        location = valid_response_check(location_range, location)
 
         location_to_delete = Location.find(location)
 
@@ -409,19 +337,7 @@ while choice != 0
       end
 
       ##### Re-asks the user to input an option---------------------------------
-      40.times {print "-"}
-      puts "\n"
-      puts "What would you like to do?"
-      40.times {print "-"}
-      puts "\n"
-      puts "1".ljust(10) + "View all locations".rjust(30)
-      puts "2".ljust(10) + "View all products at a location".rjust(30)
-      puts "3".ljust(10) + "Change location name".rjust(30)
-      puts "4".ljust(10) + "Add new location".rjust(30)
-      puts "5".ljust(10) + "Delete location".rjust(30)
-      puts "0".ljust(10) + "Exit location information".rjust(30)
-      print ">> "
-      location_choice = gets.to_i
+      location_choice = locations_menu
 
     end
 
@@ -454,27 +370,17 @@ while choice != 0
       ##### Displays all categories---------------------------------------------
       if category_choice == 1
         puts "Categories:"
-        Category.all.each do |categories|
-          puts "#{categories.id} - #{categories.name}"
-        end
+        list_all(Category)
       end
 
       ##### Displays all products in a category instance------------------------
       if category_choice == 2
         puts "Which category would you like to view products in?"
-        category_range = []
-        Category.all.each do |category|
-          puts "#{category.id} - #{category.name}"
-          category_range << category.id
-        end
+        category_range = list_all_store_range(Category)
         print ">> "
         category = gets.to_i
 
-        while !category_range.include?(category)
-          puts "Please choose a category id from the options:"
-          print ">> "
-          category = gets.to_i
-        end
+        category = valid_response_check(category_range, category)
 
         category_to_view = Category.find(category)
         category_to_view.shoes.each do |shoes|
@@ -506,7 +412,12 @@ while choice != 0
         new_category_name = gets.chomp
 
         category_to_change.name = new_category_name
-        category_to_change.save
+
+        if category_to_change.save
+          puts "Category name changed."
+        else
+          puts "Name change failed."
+        end
       end
 
       ##### Adds a new category-------------------------------------------------
@@ -514,7 +425,14 @@ while choice != 0
         puts "What's the name of the new category?"
         print ">> "
         new_category = gets.chomp
-        Category.add(new_category)
+        category_to_add = Category.new
+        category_to_add.name = new_category
+
+        if category_to_add.add_to_database
+          puts "Category added."
+        else
+          puts "Failed to add category."
+        end
       end
 
       ##### Deletes a category after checking to ensure no products are assigned

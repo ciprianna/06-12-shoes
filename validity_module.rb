@@ -6,7 +6,7 @@
 # choice - Integer that the user chooses
 #
 # Returns choice - Integer
-def valid_response_entered(range, choice)
+def valid_response_check(range, choice)
   while !range.include?(choice)
     puts "Please choose an item from the menu:"
     print ">> "
@@ -34,6 +34,20 @@ def valid?
   end
 
   if location_stock.nil? || location_stock == ""
+    valid = false
+  end
+
+  return valid
+
+end
+
+# Method to ensure that name field is valid for Location/Category Objects.
+#
+# Returns valid - true/false Boolean
+def valid_name?
+  valid = true
+
+  if name.nil? || name == ""
     valid = false
   end
 
