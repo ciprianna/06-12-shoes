@@ -35,7 +35,7 @@ class Location
   #
   # Returns id of Object if created - Integer, else returns false
   def add_to_database
-    if Valid.name?
+    if Valid.name?(self)
       DATABASE.execute("INSERT INTO locations (name) VALUES ('#{@name}');")
 
       @id = DATABASE.last_insert_row_id
