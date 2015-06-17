@@ -35,7 +35,7 @@ class Location
   #
   # Returns id of Object if created - Integer, else returns false
   def add_to_database
-    if valid_name?
+    if Valid.name?
       DATABASE.execute("INSERT INTO locations (name) VALUES ('#{@name}');")
 
       @id = DATABASE.last_insert_row_id
@@ -96,7 +96,7 @@ class Location
   #
   # Returns true/false Boolean
   def save
-    if valid_name?
+    if Valid.name?
       DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};")
     else
       return false

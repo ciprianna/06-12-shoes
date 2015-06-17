@@ -1,10 +1,10 @@
 # Driver
 require "sqlite3"
+require_relative "menu_module.rb"
+require_relative "validity_module.rb"
 require_relative "shoes.rb"
 require_relative "location.rb"
 require_relative "category.rb"
-require_relative "menu_module.rb"
-require_relative "validity_module.rb"
 
 # Creates the database connection
 DATABASE = SQLite3::Database.new("shoe_inventory.db")
@@ -20,7 +20,7 @@ DATABASE.results_as_hash = true
 ################################################################################
 
 # Main menu in ux to get an initial choice from the user
-choice = main_menu
+choice = Menu.main
 
 # Begins the loop when a correct input from the user has been entered.
 #   If zero, it skips the loop entirely and exits the program.
@@ -34,7 +34,7 @@ while choice != 0
   end
 ##### Quantity information menu; gives a list of sub-options--------------------
   if choice == 2
-    quantity_choice = quantity_menu
+    quantity_choice = Menu.quantity
 
     while quantity_choice != 0
 
@@ -61,7 +61,7 @@ while choice != 0
         print ">> "
         shoe_to_change = gets.to_i
 
-        shoe_to_change = valid_response_check(quantity_range, shoe_to_change)
+        shoe_to_change = Valid.response_check(quantity_range, shoe_to_change)
 
         shoe = Shoe.find(shoe_to_change)
 
@@ -78,7 +78,7 @@ while choice != 0
       end
 
       ##### Re-asks for the menu options----------------------------------------
-      quantity_choice = quantity_menu
+      quantity_choice = Menu.quantity
 
     end
   end
@@ -104,14 +104,14 @@ while choice != 0
       print ">> "
       category_id = gets.to_i
 
-      new_shoe_object.category_id = valid_response_check(category_range, category_id)
+      new_shoe_object.category_id = Valid.response_check(category_range, category_id)
 
       puts "Storage location:"
       location_range = list_all_store_range(Location)
       print ">> "
       location_id = gets.to_i
 
-      new_shoe_object.location_id = valid_response_check(location_range, location_id)
+      new_shoe_object.location_id = Valid.response_check(location_range, location_id)
 
       puts "Quantity:"
       print ">> "
@@ -135,7 +135,7 @@ while choice != 0
     print ">> "
     shoe = gets.to_i
 
-    shoe = valid_response_check(shoe_range, shoe)
+    shoe = Valid.response_check(shoe_range, shoe)
 
     shoe_to_change = Shoe.find(shoe)
 
@@ -146,7 +146,7 @@ while choice != 0
     40.times {print "-"}
     puts "\n"
     puts "What would you like to update?"
-    to_update = update_product_menu
+    to_update = Menu.update_product
 
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while to_update != 0
@@ -182,7 +182,7 @@ while choice != 0
         print ">> "
         new_category_id = gets.to_i
 
-        new_category_id = valid_response_check(category_range, new_category_id)
+        new_category_id = Valid.response_check(category_range, new_category_id)
 
         shoe_to_change.category_id = new_category_id
       end
@@ -212,7 +212,7 @@ while choice != 0
       puts "\n"
       puts "Is there anything else to update for this product?"
 
-      to_update = update_product_menu
+      to_update = Menu.update_product
 
     end
 
@@ -247,7 +247,7 @@ while choice != 0
 
 ##### Displays options for the locations menu-----------------------------------
   if choice == 6
-    location_choice = locations_menu
+    location_choice = Menu.locations
 
     ##### Begins loop once a valid input is entered; if zero, exits the sub-menu
     while location_choice != 0
@@ -265,7 +265,7 @@ while choice != 0
         print ">> "
         location = gets.to_i
 
-        location = valid_response_check(location_range, location)
+        location = Valid.response_check(location_range, location)
 
         location_to_view = Location.find(location)
 
@@ -282,7 +282,7 @@ while choice != 0
         print ">> "
         location = gets.to_i
 
-        location = valid_response_check(location_range, location)
+        location = Valid.response_check(location_range, location)
 
         location_to_change = Location.find(location)
 
@@ -321,7 +321,7 @@ while choice != 0
         print ">> "
         location = gets.to_i
 
-        location = valid_response_check(location_range, location)
+        location = Valid.response_check(location_range, location)
 
         location_to_delete = Location.find(location)
 
@@ -337,7 +337,7 @@ while choice != 0
       end
 
       ##### Re-asks the user to input an option---------------------------------
-      location_choice = locations_menu
+      location_choice = Menu.locations
 
     end
 
@@ -380,7 +380,7 @@ while choice != 0
         print ">> "
         category = gets.to_i
 
-        category = valid_response_check(category_range, category)
+        category = Valid.response_check(category_range, category)
 
         category_to_view = Category.find(category)
         category_to_view.shoes.each do |shoes|
@@ -520,7 +520,7 @@ while choice != 0
   end
 
 ##### Re-asks the user for an option--------------------------------------------
-  choice = main_menu
+  choice = Menu.main
 
 end
 

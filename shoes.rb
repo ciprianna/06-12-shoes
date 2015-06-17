@@ -62,7 +62,7 @@ class Shoe
   #
   # Returns id of the object if added - Integer, else returns False.
   def add_to_database
-    if valid?
+    if Valid.shoe?
       DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{@name}', #{@cost}, '#{@color}', #{@category_id}, #{@location_id}, #{@location_stock});")
 
       @id = DATABASE.last_insert_row_id
@@ -145,7 +145,7 @@ class Shoe
   #
   # Returns true/false Boolean.
   def save
-    if valid?
+    if Valid.shoe?
       DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
 
     else
