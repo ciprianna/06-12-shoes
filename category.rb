@@ -95,7 +95,7 @@ class Category
   #
   # Returns true/false Boolean
   def save
-    if Valid.name?
+    if Valid.name?(self)
       DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};")
     else
       return false

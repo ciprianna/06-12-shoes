@@ -145,7 +145,8 @@ class Shoe
   #
   # Returns true/false Boolean.
   def save
-    if Valid.shoe?
+
+    if Valid.shoe?(self)
       DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
 
     else

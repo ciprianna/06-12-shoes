@@ -101,6 +101,28 @@ module Menu
     return location_choice
   end
 
+  def self.categories
+    40.times {print "-"}
+    puts "\n"
+    puts "What would you like to do?"
+    40.times {print "-"}
+    puts "\n"
+    puts "1".ljust(10) + "View all categories".rjust(30)
+    puts "2".ljust(10) + "View all products in a category".rjust(30)
+    puts "3".ljust(10) + "Change category name".rjust(30)
+    puts "4".ljust(10) + "Add new category".rjust(30)
+    puts "5".ljust(10) + "Delete category".rjust(30)
+    puts "0".ljust(10) + "Exit category information".rjust(30)
+    print ">> "
+    category_choice = gets.to_i
+
+    range_for_categories = [0, 1, 2, 3, 4, 5]
+
+    Valid.response_check(range_for_categories, category_choice)
+
+    return category_choice
+  end
+
   # Lists all Objects in a Class like a menu
   #
   # class_to_list - Class to use the .all method on

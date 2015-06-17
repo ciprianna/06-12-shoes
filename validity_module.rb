@@ -19,23 +19,25 @@ module Valid
 
   # Method to ensure that all fields are valid in a Shoe Object
   #
+  # object - Shoe Object to check values of
+  #
   # Returns valid - true/false Boolean
-  def self.shoe?
+  def self.shoe?(object)
     valid = true
 
-    if name.nil? || name == ""
+    if object.name.nil? || object.name == ""
       valid = false
     end
 
-    if cost.nil? || cost == ""
+    if object.cost.nil? || object.cost == ""
       valid = false
     end
 
-    if color.nil? || color == ""
+    if object.color.nil? || object.color == ""
       valid = false
     end
 
-    if location_stock.nil? || location_stock == ""
+    if object.location_stock.nil? || object.location_stock == ""
       valid = false
     end
 
@@ -45,11 +47,13 @@ module Valid
 
   # Method to ensure that name field is valid for Location/Category Objects.
   #
+  # object - Location or Category Object to check name value of
+  #
   # Returns valid - true/false Boolean
-  def self.name?
+  def self.name?(object)
     valid = true
 
-    if name.nil? || name == ""
+    if object.name.nil? || object.name == ""
       valid = false
     end
 

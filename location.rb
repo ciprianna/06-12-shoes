@@ -96,7 +96,7 @@ class Location
   #
   # Returns true/false Boolean
   def save
-    if Valid.name?
+    if Valid.name?(self)
       DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};")
     else
       return false
