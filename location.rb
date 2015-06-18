@@ -21,48 +21,15 @@ class Location
     @name = options["name"]
   end
 
-  # Creates a new location (row) in the locations table
-  #
-  # location_name - String
-  #
-  # Returns the newly created Location Object
-  def self.add(location_name)
-    DATABASE.execute("INSERT INTO locations (name) VALUES ('#{location_name}');")
-
-    temp_id = DATABASE.last_insert_row_id
-
-    object = Location.new(temp_id, location_name)
-
-    return object
-  end
-
   # Adds a Location Object to the locations table
   #
-  # Returns id of Object if created - Integer, else returns false
+  # Returns Location Object, else returns false
   def add_to_database
     if Valid.name?(self)
-      DATABASE.execute("INSERT INTO locations (name) VALUES ('#{@name}');")
-
-      @id = DATABASE.last_insert_row_id
+      self.add
     else
       return false
     end
-  end
-
-  # Read method for the locations table
-  #
-  # Returns all information from the locations table as an Array of Location
-  #   Objects.
-  def self.all_as_objects
-    results = self.all
-
-    store_results = []
-
-    results.each do |hash|
-      store_results << Location.new(hash['id'], hash['name'])
-    end
-
-    return store_results
   end
 
   # Reads all shoes at a location object

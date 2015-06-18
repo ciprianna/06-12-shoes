@@ -31,53 +31,15 @@ class Shoe
     @location_stock = options['location_stock']
   end
 
-  # Creates a new shoe (row) in the shoes table
-  #
-  # shoe_name - String for the shoe's name
-  # cost - Integer for the shoe's cost
-  # color - String for the shoe's color
-  # category_id - Integer, foreign key from the categories table
-  # location_id - Integer, foreign key from the locations table
-  # quantity - Integer, to be added to the location_stock column
-  #
-  # Returns the new Shoe Object created.
-  def self.add(shoe_name, cost, color, category_id, location_id, quantity)
-    DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{shoe_name}', #{cost}, '#{color}', #{category_id}, #{location_id}, #{quantity});")
-
-    temp_id = DATABASE.last_insert_row_id
-
-    Shoe.new(temp_id, shoe_name, cost, color, category_id, location_id, quantity)
-
-    return self
-  end
-
   # Adds a Shoe Object to the database.
   #
   # Returns id of the object if added - Integer, else returns False.
   def add_to_database
     if Valid.shoe?(self)
-      DATABASE.execute("INSERT INTO shoes (name, cost, color, category_id, location_id, location_stock) VALUES ('#{@name}', #{@cost}, '#{@color}', #{@category_id}, #{@location_id}, #{@location_stock});")
-
-      @id = DATABASE.last_insert_row_id
+      self.add
     else
       false
     end
-  end
-
-  # Read method for the shoes table
-  #
-  # Returns an Array containing all rows as Shoe Objects.
-  def self.all_as_objects
-    # results = DATABASE.execute("SELECT * FROM shoes;")
-    results = self.all
-
-    store_results = []
-
-    results.each do |hash|
-      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
-    end
-
-    return store_results
   end
 
   # Sums all of the product inventory

@@ -21,48 +21,15 @@ class Category
     @name = options["name"]
   end
 
-  # Creates a new category (row) in the categories table
-  #
-  # category_name - String
-  #
-  # Returns the new Category Object
-  def self.add(category_name)
-    DATABASE.execute("INSERT INTO categories (name) VALUES ('#{category_name}');")
-
-    temp_id = DATABASE.last_insert_row_id
-
-    object = Category.new(temp_id, category_name)
-
-    return object
-  end
-
   # Adds a Category Object to the categories table
   #
-  # Returns id of Object if created - Integer, else returns false
+  # Returns Category Object if created, else returns false
   def add_to_database
     if Valid.name?(self)
-      DATABASE.execute("INSERT INTO categories (name) VALUES ('#{@name}');")
-
-      @id = DATABASE.last_insert_row_id
+      self.add
     else
       return false
     end
-  end
-
-  # Read method for the categories table
-  #
-  # Returns all data from the categories table as an Array of Category Objects.
-  #   Each Object represents a row from the categories table.
-  def self.all_as_objects
-    results = self.all
-
-    store_results = []
-
-    results.each do |hash|
-      store_results << Category.new(hash['id'], hash['name'])
-    end
-
-    return store_results
   end
 
   # Reads all shoes in a category object
@@ -81,16 +48,16 @@ class Category
     return store_results
   end
 
-  # Update method for the categories table
-  #
-  # Returns true/false Boolean
-  def save
-    if Valid.name?(self)
-      DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};")
-    else
-      return false
-    end
-  end
+  # # Update method for the categories table
+  # #
+  # # Returns true/false Boolean
+  # def save
+  #   if Valid.name?(self)
+  #     DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};")
+  #   else
+  #     return false
+  #   end
+  # end
 
   # Delete a category from the categories table
   #
