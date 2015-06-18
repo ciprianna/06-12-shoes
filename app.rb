@@ -72,7 +72,7 @@ while choice != 0
         change = gets.to_i
 
         shoe.update_quantity(change)
-        if shoe.save
+        if shoe.save_valid
           puts "Quantity updated"
         else
           puts "Quantity update failed."
@@ -210,7 +210,7 @@ while choice != 0
 
     end
 
-    if shoe_to_change.save
+    if shoe_to_change.save_valid
       puts "Product update successful."
     else
       puts "Product update failed to save."
@@ -286,7 +286,7 @@ while choice != 0
 
         location_to_change.name = new_location_name
 
-        if location_to_change.save
+        if location_to_change.save_valid
           puts "Location name changed."
         else
           puts "Name change failed."
@@ -382,7 +382,7 @@ while choice != 0
 
         category_to_change.name = new_category_name
 
-        if category_to_change.save
+        if category_to_change.save_valid
           puts "Category name changed."
         else
           puts "Name change failed."

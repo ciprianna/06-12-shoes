@@ -48,16 +48,16 @@ class Category
     return store_results
   end
 
-  # # Update method for the categories table
-  # #
-  # # Returns true/false Boolean
-  # def save
-  #   if Valid.name?(self)
-  #     DATABASE.execute("UPDATE categories SET name = '#{@name}' WHERE id = #{@id};")
-  #   else
-  #     return false
-  #   end
-  # end
+  # Update method for the categories table
+  #
+  # Returns true/false Boolean
+  def save_valid
+    if Valid.name?(self)
+      self.save
+    else
+      return false
+    end
+  end
 
   # Delete a category from the categories table
   #

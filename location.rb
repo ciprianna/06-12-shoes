@@ -52,9 +52,9 @@ class Location
   # Update method for the locations table
   #
   # Returns true/false Boolean
-  def save
+  def save_valid
     if Valid.name?(self)
-      DATABASE.execute("UPDATE locations SET name = '#{@name}' WHERE id = #{@id};")
+      self.save
     else
       return false
     end

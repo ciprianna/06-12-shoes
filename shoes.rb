@@ -92,19 +92,10 @@ class Shoe
 
   # Updates the shoes table in the database.
   #
-  # shoe_name - String for the shoe's name
-  # cost - Integer for the cost of the shoe
-  # color - String for the color of the shoe
-  # category_id - Integer, foreign key from the categories table
-  # location_id - Integer, foreign key from the locations table
-  # quantity - Integer for the location_stock column
-  #
   # Returns true/false Boolean.
-  def save
-
+  def save_valid
     if Valid.shoe?(self)
-      DATABASE.execute("UPDATE shoes SET name = '#{@name}', cost = #{@cost}, color = '#{@color}', category_id = #{@category_id}, location_id = #{@location_id}, location_stock = #{@location_stock} WHERE id = #{@id};")
-
+      self.save
     else
       return false
     end
