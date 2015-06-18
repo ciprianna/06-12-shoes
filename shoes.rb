@@ -11,13 +11,14 @@ class Shoe
 
   # Assigns an id for identification in instance methods
   #
-  # id (optional) - Integer assigned as the primary key from the id column
-  # name (optional) - String that is the shoe's name
-  # cost (optional) - Integer that represents the cost of the shoe
-  # color (optional) - String for the color of the shoe
-  # category_id (optional) - Integer, foreign key from the categories table
-  # location_id (optional) - Integer, foreign key from the locations table
-  # location_stock (optional) - Integer indicating quantity of product
+  # options - empty Hash
+  #   - id (optional) - Integer assigned as the primary key from the id column
+  #   - name (optional) - String that is the shoe's name
+  #   - cost (optional) - Integer that represents the cost of the shoe
+  #   - color (optional) - String for the color of the shoe
+  #   - category_id (optional) - Integer, foreign key from the categories table
+  #   - location_id (optional) - Integer, foreign key from the locations table
+  #   - location_stock (optional) - Integer indicating quantity of product
   #
   # Returns Shoe object created
   def initialize(options = {})
@@ -28,17 +29,6 @@ class Shoe
     @category_id = options['category_id']
     @location_id = options['location_id']
     @location_stock = options['location_stock']
-  end
-
-  # Read method for a single shoe product (row) in the shoes table
-  #
-  # Returns a Shoe Object.
-  def self.find_as_object(id)
-
-    results = self.find(id)
-
-
-    Shoe.new(results['id'], results['name'], results['cost'], results['color'], results['category_id'], results['location_id'], results['location_stock'])
   end
 
   # Creates a new shoe (row) in the shoes table

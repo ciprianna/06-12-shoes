@@ -11,13 +11,14 @@ class Category
 
   # Assigns an id for identification in instance methods
   #
-  # id (optional) - Integer assigned as the primary key from the id column
-  # name (optional) - String
+  # options - emtpy Hash
+  #   - id (optional) - Integer assigned as the primary key from the id column
+  #   - name (optional) - String
   #
   # Returns the category object created
-  def initialize(id = nil, name = nil)
-    @id = id
-    @name = name
+  def initialize(options = {})
+    @id = options["id"]
+    @name = options["name"]
   end
 
   # Creates a new category (row) in the categories table
@@ -46,20 +47,6 @@ class Category
     else
       return false
     end
-  end
-
-  # Locates a row from the categories table for the passed id.
-  #
-  # id - primary key; Integer
-  #
-  # Returns Category object
-  def self.find_as_object(id)
-
-    results = self.find(id)
-
-    object = Category.new(id, results['name'])
-
-    return object
   end
 
   # Read method for the categories table

@@ -11,13 +11,14 @@ class Location
 
   # Assigns an id for identification in instance methods
   #
-  # id (optional) - Integer assigned as the primary key
-  # name (optional) - String
+  # options - Empty Hash
+  #   - id (optional) - Integer assigned as the primary key
+  #   - name (optional) - String
   #
   # Returns newly created Location Object
-  def initialize(id = nil, name = nil)
-    @id = id
-    @name = name
+  def initialize(options = {})
+    @id = options["id"]
+    @name = options["name"]
   end
 
   # Creates a new location (row) in the locations table
@@ -46,20 +47,6 @@ class Location
     else
       return false
     end
-  end
-
-  # Locates a row from the locations table for the passed id.
-  #
-  # id - primary key; Integer
-  #
-  # Returns Location object
-  def self.find_as_object(id)
-
-    results = self.find(id)
-
-    object = Location.new(id, results['name'])
-
-    return object
   end
 
   # Read method for the locations table
