@@ -20,14 +20,14 @@ class Shoe
   # location_stock (optional) - Integer indicating quantity of product
   #
   # Returns Shoe object created
-  def initialize(id = nil, name = nil, cost = nil, color = nil, category_id = nil, location_id = nil, location_stock = nil)
-    @id = id
-    @name = name
-    @cost = cost
-    @color = color
-    @category_id = category_id
-    @location_id = location_id
-    @location_stock = location_stock
+  def initialize(options = {})
+    @id = options["id"]
+    @name = options["name"]
+    @cost = options['cost']
+    @color = options['color']
+    @category_id = options['category_id']
+    @location_id = options['location_id']
+    @location_stock = options['location_stock']
   end
 
   # Read method for a single shoe product (row) in the shoes table

@@ -10,32 +10,15 @@ module DatabaseClassMethods
   def all
     table = self.to_s.pluralize.underscore
 
-    # remove "results" TODO
-    #results =
-    DATABASE.execute("SELECT * FROM #{table};")
+    results = DATABASE.execute("SELECT * FROM #{table};")
 
-  #   hash_keys = results.first.keys
-  #
-  #   store_results = []
-  #   # for_new_object_keys = hash_keys.map {|key| "hash['#{key}']"}s
-  #   # for_new_object = for_new_object_keys.to_s.gsub('"', '')
-  #   # for_new_object = for_new_object.slice(1..-2)
-  #
-  # #  binding.pry
-  #   results.each do |hash|
-  #     object = Shoe.new
-  #   #  binding.pry
-  #     hash.each do |key, value|
-  #       store_temp = hash[key]
-  #       object_store = self.new(store_temp)
-  #       binding.pry
-  #       store_results << object_store
-  #     end
-  #
-  #   end
-  #
-  #   binding.pry
-  #   return store_results
+    store_results = []
+
+    results.each do |hash|
+      store_results << self.new(hash)
+    end
+
+    return store_results
 
   end
 
