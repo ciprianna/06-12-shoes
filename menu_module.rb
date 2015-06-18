@@ -129,7 +129,7 @@ module Menu
   #
   # Returns a String containing Object information
   def self.list_all(class_to_list)
-    class_to_list.all.each do |object|
+    class_to_list.all_as_objects.each do |object|
       puts "#{object.id} - #{object.name}"
     end
   end
@@ -141,7 +141,7 @@ module Menu
   # Returns the Array of id's - Integers
   def self.list_all_store_range(class_to_list)
     range = []
-    class_to_list.all.each do |object|
+    class_to_list.all_as_objects.each do |object|
       puts "#{object.id} - #{object.name}"
       range << object.id
     end

@@ -1,6 +1,10 @@
 # Category Class
+require_relative "database_class_methods.rb"
+require_relative "database_instance_methods.rb"
 
 class Category
+  extend DatabaseClassMethods
+  include DatabaseInstanceMethods
 
   attr_reader :id
   attr_accessor :name
@@ -49,10 +53,9 @@ class Category
   # id - primary key; Integer
   #
   # Returns Category object
-  def self.find(id)
-    @id = id
+  def self.find_as_object(id)
 
-    results = DATABASE.execute("SELECT * FROM categories WHERE id = #{@id};").first
+    results = self.find(id)
 
     object = Category.new(id, results['name'])
 
@@ -63,8 +66,8 @@ class Category
   #
   # Returns all data from the categories table as an Array of Category Objects.
   #   Each Object represents a row from the categories table.
-  def self.all
-    results = DATABASE.execute("SELECT * FROM categories;")
+  def self.all_as_objects
+    results = self.all
 
     store_results = []
 
@@ -105,9 +108,9 @@ class Category
   # Delete a category from the categories table
   #
   # Returns true/false Boolean
-  def delete
+  def delete_category
     if self.shoes.empty?
-      DATABASE.execute("DELETE FROM categories WHERE id = #{@id};")
+      self.delete
     else
       return false
     end

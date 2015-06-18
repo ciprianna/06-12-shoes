@@ -2,6 +2,8 @@
 require "sqlite3"
 require_relative "menu_module.rb"
 require_relative "validity_module.rb"
+require_relative "database_class_methods.rb"
+require_relative "database_instance_methods.rb"
 require_relative "shoes.rb"
 require_relative "location.rb"
 require_relative "category.rb"
@@ -28,7 +30,7 @@ while choice != 0
 
 ##### Displays all products-----------------------------------------------------
   if choice == 1
-    Shoe.all.each do |shoe_object|
+    Shoe.all_as_objects.each do |shoe_object|
       puts "ID: #{shoe_object.id}, Name: #{shoe_object.name}, Cost: #{shoe_object.cost}, Color: #{shoe_object.color}, Category: #{shoe_object.category_id}, Location: #{shoe_object.location_id}, Quantity: #{shoe_object.location_stock}"
     end
   end
@@ -40,7 +42,7 @@ while choice != 0
 
       ##### Views all stock quantities------------------------------------------
       if quantity_choice == 1
-        Shoe.all.each do |shoe_object|
+        Shoe.all_as_objects.each do |shoe_object|
           puts "#{shoe_object.id} - #{shoe_object.name} (#{shoe_object.location_stock})"
         end
 
@@ -63,7 +65,7 @@ while choice != 0
 
         shoe_to_change = Valid.response_check(quantity_range, shoe_to_change)
 
-        shoe = Shoe.find(shoe_to_change)
+        shoe = Shoe.find_as_object(shoe_to_change)
 
         puts "Okay, and how many are you adding? If removing quantity, enter a negative number."
         print ">> "
@@ -137,7 +139,7 @@ while choice != 0
 
     shoe = Valid.response_check(shoe_range, shoe)
 
-    shoe_to_change = Shoe.find(shoe)
+    shoe_to_change = Shoe.find_as_object(shoe)
 
     ##### Displays all information pertaining to the selected shoe--------------
     puts "ID: #{shoe_to_change.id}, Name: #{shoe_to_change.name}, Cost: #{shoe_to_change.cost}, Color: #{shoe_to_change.color}, Category: #{shoe_to_change.category_id}, Location: #{shoe_to_change.location_id}, Quantity: #{shoe_to_change.location_stock}"
@@ -259,7 +261,7 @@ while choice != 0
 
         location = Valid.response_check(location_range, location)
 
-        location_to_view = Location.find(location)
+        location_to_view = Location.find_as_object(location)
 
         location_to_view.shoes.each do |shoes|
           puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
@@ -276,7 +278,7 @@ while choice != 0
 
         location = Valid.response_check(location_range, location)
 
-        location_to_change = Location.find(location)
+        location_to_change = Location.find_as_object(location)
 
         puts "What is the new name of this location?"
         print ">> "
@@ -315,9 +317,9 @@ while choice != 0
 
         location = Valid.response_check(location_range, location)
 
-        location_to_delete = Location.find(location)
+        location_to_delete = Location.find_as_object(location)
 
-        if location_to_delete.delete
+        if location_to_delete.delete_location
           puts "Location deleted"
         else
           puts "Cannot delete this location while shoes are stored here."
@@ -357,7 +359,7 @@ while choice != 0
 
         category = Valid.response_check(category_range, category)
 
-        category_to_view = Category.find(category)
+        category_to_view = Category.find_as_object(category)
         category_to_view.shoes.each do |shoes|
           puts "#{shoes.id} - #{shoes.name} (#{shoes.location_stock})"
         end
@@ -372,7 +374,7 @@ while choice != 0
 
         category = Valid.response_check(category_range, category)
 
-        category_to_change = Category.find(category)
+        category_to_change = Category.find_as_object(category)
 
         puts "What is the new name of this category?"
         print ">> "
@@ -412,9 +414,9 @@ while choice != 0
 
         category = Valid.response_check(category_range, category)
 
-        category_to_delete = Category.find(category)
+        category_to_delete = Category.find_as_object(category)
 
-        if category_to_delete.delete
+        if category_to_delete.delete_category
           puts "Category deleted"
         else
           puts "Cannot delete this category while shoes are assigned."
@@ -440,7 +442,7 @@ while choice != 0
 
     shoe_choice = Valid.response_check(shoe_range, shoe_choice)
 
-    shoe_to_delete = Shoe.find(shoe_choice)
+    shoe_to_delete = Shoe.find_as_object(shoe_choice)
 
     puts "ID: #{shoe_to_delete.id}, Name: #{shoe_to_delete.name}, Cost: #{shoe_to_delete.cost}, Color: #{shoe_to_delete.color}, Category: #{shoe_to_delete.category_id}, Location: #{shoe_to_delete.location_id}, Quantity: #{shoe_to_delete.location_stock}"
 

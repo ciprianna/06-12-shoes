@@ -1,6 +1,10 @@
 # Shoe Class
+require_relative "database_class_methods.rb"
+require_relative "database_instance_methods.rb"
 
 class Shoe
+  extend DatabaseClassMethods
+  include DatabaseInstanceMethods
 
   attr_reader :id
   attr_accessor :name, :cost, :color, :category_id, :location_id, :location_stock
@@ -29,10 +33,9 @@ class Shoe
   # Read method for a single shoe product (row) in the shoes table
   #
   # Returns a Shoe Object.
-  def self.find(id)
-    @id = id
+  def self.find_as_object(id)
 
-    results = DATABASE.execute("SELECT * FROM shoes WHERE id = #{@id};").first
+    results = self.find(id)
 
 
     Shoe.new(results['id'], results['name'], results['cost'], results['color'], results['category_id'], results['location_id'], results['location_stock'])
@@ -74,8 +77,9 @@ class Shoe
   # Read method for the shoes table
   #
   # Returns an Array containing all rows as Shoe Objects.
-  def self.all
-    results = DATABASE.execute("SELECT * FROM shoes;")
+  def self.all_as_objects
+    # results = DATABASE.execute("SELECT * FROM shoes;")
+    results = self.all
 
     store_results = []
 
@@ -164,18 +168,6 @@ class Shoe
 
     @location_stock += to_add
 
-  end
-
-  # Deletes a shoe row from the shoes table
-  #
-  # Returns true/false Boolean
-  def delete
-    if
-      DATABASE.execute("DELETE FROM shoes WHERE id = #{@id};")
-      return true
-    else
-      return false
-    end
   end
 
 end

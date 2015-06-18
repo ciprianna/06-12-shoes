@@ -1,6 +1,10 @@
 # Location Class
+require_relative "database_class_methods.rb"
+require_relative "database_instance_methods.rb"
 
 class Location
+  extend DatabaseClassMethods
+  include DatabaseInstanceMethods
 
   attr_reader :id
   attr_accessor :name
@@ -49,10 +53,9 @@ class Location
   # id - primary key; Integer
   #
   # Returns Location object
-  def self.find(id)
-    @id = id
+  def self.find_as_object(id)
 
-    results = DATABASE.execute("SELECT * FROM locations WHERE id = #{@id};").first
+    results = self.find(id)
 
     object = Location.new(id, results['name'])
 
@@ -63,8 +66,8 @@ class Location
   #
   # Returns all information from the locations table as an Array of Location
   #   Objects.
-  def self.all
-    results = DATABASE.execute("SELECT * FROM locations;")
+  def self.all_as_objects
+    results = self.all
 
     store_results = []
 
@@ -106,9 +109,9 @@ class Location
   # Delete a category row from the categories table
   #
   # Returns true/false Boolean
-  def delete
+  def delete_location
     if self.shoes.empty?
-      DATABASE.execute("DELETE FROM locations WHERE id = #{@id};")
+      self.delete
     else
       return false
     end
