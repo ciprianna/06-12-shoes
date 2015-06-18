@@ -43,7 +43,7 @@ class Location
     store_results = []
 
     results.each do |hash|
-      store_results << Shoe.new(hash['id'], hash['name'], hash['cost'], hash['color'], hash['category_id'], hash['location_id'], hash['location_stock'])
+      store_results << Shoe.new(hash)
     end
 
     return store_results
