@@ -36,7 +36,7 @@ class Shoe
   # Returns id of the object if added - Integer, else returns False.
   def add_to_database
     if Valid.shoe?(self)
-      self.add
+      Shoe.add({"name" => "#{self.name}", "cost" => "#{self.cost}", "color" => "#{self.color}", "category_id" => "#{self.category_id}", "location_id" => "#{self.location_id}", "location_stock" => "#{self.location_stock}"})
     else
       false
     end
