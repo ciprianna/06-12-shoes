@@ -26,7 +26,7 @@ class Location
   # Returns Location Object, else returns false
   def add_to_database
     if Valid.name?(self)
-      self.add
+      Location.add({"name" => "#{self.name}"})
     else
       return false
     end
